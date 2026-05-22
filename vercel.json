@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/api/leads", "destination": "/api/leads" }
+  ],
+  "functions": {
+    "api/leads.js": {
+      "maxDuration": 15
+    }
+  }
+}
