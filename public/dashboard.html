@@ -16,7 +16,6 @@
       --accent: #7b2ff7;
       --danger: #ff6b6b;
       --warning: #ffd93d;
-      --success: #00f5d4;
       --text: #e0e0f0;
       --muted: #6b6b8d;
       --radius: 12px;
@@ -30,126 +29,101 @@
     }
 
     .sidebar {
-      width: 240px;
+      width: 220px;
       background: var(--surface);
       border-right: 1px solid var(--border);
       padding: 20px 0;
       height: 100vh;
       position: sticky;
       top: 0;
-      overflow-y: auto;
     }
     .sidebar-logo { padding: 0 20px 24px; border-bottom:1px solid var(--border); margin-bottom:16px; }
-    .sidebar-logo h1 { font-size:1.2rem; font-weight:800; }
+    .sidebar-logo h1 { font-size:1.1rem; font-weight:800; letter-spacing:-0.5px; }
     .sidebar-logo h1 span:first-child { color: var(--primary); }
     .sidebar-logo h1 span:last-child { color: var(--accent); }
-    .sidebar-logo .plan { font-size:0.7rem; color:var(--muted); margin-top:4px; }
+    .sidebar-logo .plan { font-size:0.65rem; color:var(--muted); margin-top:4px; }
     .nav-item {
-      display: flex; align-items: center; gap:12px; padding:10px 20px;
-      color: var(--muted); text-decoration:none; font-size:0.85rem;
-      transition: all 0.2s; cursor:pointer; border-left: 3px solid transparent;
+      display: flex; align-items: center; gap:10px; padding:9px 20px;
+      color: var(--muted); font-size:0.82rem; cursor:pointer;
+      border-left: 2px solid transparent; transition: all 0.15s;
     }
-    .nav-item:hover { color:var(--text); background:rgba(255,255,255,0.03); }
-    .nav-item.active { color:var(--primary); border-left-color:var(--primary); background:rgba(0,245,212,0.05); }
-    .nav-item .icon { font-size:1.1rem; }
+    .nav-item:hover { color:var(--text); background:rgba(255,255,255,0.02); }
+    .nav-item.active { color:var(--primary); border-left-color:var(--primary); background:rgba(0,245,212,0.04); }
 
-    .main { flex:1; padding: 24px 32px; max-width: 1300px; }
+    .main { flex:1; padding: 24px 28px; max-width: 1200px; overflow-y:auto; height:100vh; }
     .topbar {
       display:flex; justify-content:space-between; align-items:center;
-      margin-bottom:28px; flex-wrap:wrap; gap:12px;
+      margin-bottom:24px; flex-wrap:wrap; gap:10px;
     }
-    .topbar h2 { font-size:1.4rem; font-weight:600; }
-    .topbar .status {
-      display:flex; align-items:center; gap:6px;
-      font-size:0.8rem; color:var(--muted);
+    .topbar h2 { font-size:1.3rem; font-weight:600; }
+    .status-bar {
+      display:flex; align-items:center; gap:12px; font-size:0.78rem; color:var(--muted); flex-wrap:wrap;
     }
-    .topbar .status-dot {
-      width:8px; height:8px; border-radius:50%;
-      background:var(--success); display:inline-block;
-    }
-    .topbar .last-update { font-size:0.75rem; color:var(--muted); }
+    .status-dot { width:7px; height:7px; border-radius:50%; display:inline-block; }
+    .status-dot.green { background:var(--success); }
+    .status-dot.yellow { background:var(--warning); }
+    .status-dot.red { background:var(--danger); }
 
-    .grid { display:grid; gap:16px; }
+    .grid { display:grid; gap:14px; }
     .grid-4 { grid-template-columns: repeat(4, 1fr); }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
     @media (max-width:1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width:700px) { .grid-4,.grid-2,.grid-3 { grid-template-columns:1fr; } .sidebar { display:none; } .main { padding:16px; } }
+    @media (max-width:700px) { .grid-4,.grid-2 { grid-template-columns:1fr; } .sidebar { display:none; } .main { padding:14px; } }
 
     .stat-card {
       background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-      padding:20px; transition: transform 0.2s, border-color 0.2s;
+      padding:18px; transition: border-color 0.2s;
     }
-    .stat-card:hover { transform:translateY(-2px); border-color:var(--primary); }
-    .stat-card .label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
-    .stat-card .value { font-size:1.6rem; font-weight:700; margin-top:6px; }
-    .stat-card .change { font-size:0.75rem; margin-top:4px; }
-    .stat-card .change.up { color:var(--success); }
-    .stat-card .change.down { color:var(--danger); }
-    .stat-card.accent { border-left: 3px solid var(--accent); }
+    .stat-card .label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; }
+    .stat-card .value { font-size:1.5rem; font-weight:700; margin-top:4px; }
+    .stat-card .sub { font-size:0.72rem; margin-top:4px; color:var(--muted); }
+    .stat-card.bordered { border-left: 3px solid var(--primary); }
 
-    .section { margin-top:28px; }
+    .section { margin-top:24px; scroll-margin-top:16px; }
     .section-header {
       display:flex; justify-content:space-between; align-items:center;
-      margin-bottom:16px; flex-wrap:wrap; gap:8px;
+      margin-bottom:12px; flex-wrap:wrap; gap:6px;
     }
-    .section-header h3 { font-size:1rem; font-weight:600; }
-    .section-header .badge {
-      background:rgba(123,47,247,0.15); color:var(--accent);
-      padding:3px 10px; border-radius:50px; font-size:0.7rem;
-    }
-    .section-header .btn-sm {
-      background:transparent; border:1px solid var(--border);
-      color:var(--muted); padding:6px 14px; border-radius:8px;
-      font-size:0.75rem; cursor:pointer; text-decoration:none;
-    }
-    .section-header .btn-sm:hover { border-color:var(--primary); color:var(--primary); }
-
-    table { width:100%; border-collapse:collapse; font-size:0.82rem; }
-    th { text-align:left; padding:10px 12px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
-    td { padding:10px 12px; border-bottom:1px solid rgba(30,30,53,0.5); }
-    tr:hover td { background:rgba(255,255,255,0.02); }
-    .tag {
-      display:inline-block; padding:2px 8px; border-radius:50px;
-      font-size:0.7rem; background:rgba(123,47,247,0.15); color:var(--accent);
-    }
-    .tag.green { background:rgba(0,245,212,0.1); color:var(--success); }
-    .tag.orange { background:rgba(255,217,61,0.1); color:var(--warning); }
-
-    .card {
-      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-      padding:20px; overflow:hidden;
-    }
-    .card.chart-card { padding:16px; }
-    .card canvas { max-height:200px; }
-
-    .copy-card {
-      background:var(--surface); border:1px solid var(--border); border-radius:10px;
-      padding:16px; font-size:0.82rem; line-height:1.5;
-    }
-    .copy-card .meta { display:flex; gap:10px; margin-top:10px; font-size:0.7rem; color:var(--muted); }
-    .copy-card .framework {
-      display:inline-block; padding:1px 8px; border-radius:4px;
-      background:rgba(123,47,247,0.1); color:var(--accent); font-size:0.7rem;
+    .section-header h3 { font-size:0.95rem; font-weight:600; }
+    .badge {
+      background:rgba(123,47,247,0.12); color:var(--accent);
+      padding:2px 10px; border-radius:50px; font-size:0.68rem;
     }
 
-    .empty-state {
-      text-align:center; padding:40px 20px; color:var(--muted);
-    }
-    .empty-state .icon { font-size:2.5rem; margin-bottom:12px; }
-    .empty-state h4 { color:var(--text); margin-bottom:6px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; overflow:hidden; }
 
-    .activity-feed { max-height:300px; overflow-y:auto; }
+    table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+    th { text-align:left; padding:9px 10px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.3px; }
+    td { padding:9px 10px; border-bottom:1px solid rgba(30,30,53,0.4); }
+    tr:hover td { background:rgba(255,255,255,0.015); }
+
+    .empty-state { text-align:center; padding:50px 20px; color:var(--muted); }
+    .empty-state .icon { font-size:2.2rem; margin-bottom:10px; }
+    .empty-state h4 { color:var(--text); font-weight:500; margin-bottom:4px; font-size:0.95rem; }
+    .empty-state p { font-size:0.8rem; max-width:400px; margin:0 auto; line-height:1.5; }
+    .setup-steps { text-align:left; max-width:500px; margin:20px auto 0; }
+    .setup-steps li { margin-bottom:8px; font-size:0.8rem; color:var(--muted); }
+
+    .activity-feed { max-height:280px; overflow-y:auto; }
     .activity-item {
-      display:flex; gap:12px; padding:10px 0; border-bottom:1px solid rgba(30,30,53,0.3);
-      font-size:0.8rem;
+      display:flex; gap:10px; padding:8px 0; border-bottom:1px solid rgba(30,30,53,0.25);
+      font-size:0.78rem;
     }
-    .activity-item .dot {
-      width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0;
+    .activity-item .dot { width:7px; height:7px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+    .dot.green { background:var(--success); }
+    .dot.purple { background:var(--accent); }
+    .dot.yellow { background:var(--warning); }
+    .activity-item .time { color:var(--muted); font-size:0.68rem; }
+
+    .copy-preview {
+      background:var(--surface); border:1px solid var(--border); border-radius:8px;
+      padding:14px; font-size:0.8rem; line-height:1.5;
     }
-    .activity-item .dot.green { background:var(--success); }
-    .activity-item .dot.purple { background:var(--accent); }
-    .activity-item .time { color:var(--muted); font-size:0.7rem; }
+    .copy-preview .framework {
+      display:inline-block; padding:1px 7px; border-radius:3px;
+      background:rgba(123,47,247,0.1); color:var(--accent); font-size:0.65rem; margin-right:6px;
+    }
+    .copy-preview .meta { margin-top:8px; font-size:0.68rem; color:var(--muted); display:flex; gap:10px; }
   </style>
 </head>
 <body>
@@ -159,188 +133,169 @@
     <h1><span>AUTO</span><span>AFILIADOS</span></h1>
     <div class="plan">Dashboard v1.0</div>
   </div>
-  <div class="nav-item active"><span class="icon">📊</span> Overview</div>
-  <div class="nav-item"><span class="icon">👤</span> Leads</div>
-  <div class="nav-item"><span class="icon">📝</span> Copies</div>
-  <div class="nav-item"><span class="icon">📢</span> Anuncios</div>
-  <div class="nav-item"><span class="icon">💰</span> Ingresos</div>
-  <div class="nav-item"><span class="icon">⚙️</span> Configuración</div>
+  <div class="nav-item active" onclick="scrollTo('top')">📊 Overview</div>
+  <div class="nav-item" onclick="scrollTo('leads')">👤 Leads</div>
+  <div class="nav-item" onclick="scrollTo('copies')">📝 Copies</div>
+  <div class="nav-item" onclick="scrollTo('ads')">📢 Anuncios</div>
+  <div class="nav-item" onclick="scrollTo('config')">⚙️ Setup</div>
 </div>
 
 <div class="main">
   <div class="topbar">
     <div>
       <h2>📊 Dashboard</h2>
-      <div class="last-update" id="lastUpdate">Actualizando...</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:2px" id="lastUpdate">Iniciando...</div>
     </div>
-    <div class="status">
-      <span class="status-dot"></span>
-      Sistema operativo
-      <span style="margin-left:16px;">📱 WhatsApp <span id="waStatus">conectado</span></span>
+    <div class="status-bar" id="statusBar">
+      <span><span class="status-dot green"></span> Sistema OK</span>
+      <span><span class="status-dot yellow"></span> Sin base de datos</span>
     </div>
   </div>
 
   <div class="grid grid-4" id="statCards">
-    <div class="stat-card accent">
-      <div class="label">Leads Totales</div>
+    <div class="stat-card bordered">
+      <div class="label">Leads Capturados</div>
       <div class="value" id="totalLeads">0</div>
-      <div class="change up">+0 hoy</div>
+      <div class="sub" id="todayLeads">0 hoy</div>
     </div>
     <div class="stat-card">
-      <div class="label">Tasa Conversión</div>
-      <div class="value">2.4%</div>
-      <div class="change up">+0.3% vs ayer</div>
+      <div class="label">WhatsApp</div>
+      <div class="value" id="waStatusVal">✅</div>
+      <div class="sub" id="waSub">Conectado</div>
     </div>
     <div class="stat-card">
-      <div class="label">Ingresos</div>
-      <div class="value">$0</div>
-      <div class="change">Pendiente</div>
+      <div class="label">Landing Page</div>
+      <div class="value">🌐</div>
+      <div class="sub">Online</div>
     </div>
     <div class="stat-card">
-      <div class="label">Gasto Ads</div>
-      <div class="value">$0</div>
-      <div class="change">Sin campañas</div>
+      <div class="label">Base de Datos</div>
+      <div class="value" id="dbStatus">⚠️</div>
+      <div class="sub" id="dbSub">No conectada</div>
     </div>
   </div>
 
   <div class="grid grid-2">
-    <div class="section">
+    <div class="section" id="leads">
       <div class="section-header">
-        <h3>📋 Últimos Leads</h3>
-        <span class="badge" id="leadCount">0 registros</span>
+        <h3>📋 Leads</h3>
+        <span class="badge" id="leadCount">0</span>
       </div>
-      <div class="card" style="padding:0; overflow:auto;">
-        <table id="leadTable">
-          <thead><tr><th>Nombre</th><th>Email</th><th>WhatsApp</th><th>Producto</th><th>Hora</th></tr></thead>
-          <tbody id="leadBody">
-            <tr><td colspan="5"><div class="empty-state"><h4>Sin leads aún</h4><p>Compartí la landing page para recibir tus primeros leads</p></div></td></tr>
-          </tbody>
+      <div class="card" style="padding:0;">
+        <table>
+          <thead><tr><th>Nombre</th><th>Contacto</th><th>Producto</th><th>Hora</th></tr></thead>
+          <tbody id="leadBody"></tbody>
         </table>
       </div>
     </div>
 
     <div class="section">
-      <div class="section-header"><h3>⚡ Actividad Reciente</h3></div>
-      <div class="card activity-feed" id="activityFeed">
-        <div class="empty-state"><h4>Sin actividad</h4><p>La actividad aparecerá aquí automáticamente</p></div>
-      </div>
+      <div class="section-header"><h3>⚡ Actividad</h3></div>
+      <div class="card activity-feed" id="activityFeed"></div>
     </div>
   </div>
 
-  <div class="grid grid-2">
-    <div class="section">
-      <div class="section-header"><h3>📈 Leads por Día</h3></div>
-      <div class="card chart-card"><canvas id="leadsChart"></canvas></div>
-    </div>
-    <div class="section">
-      <div class="section-header"><h3>💡 Últimos Copies Generados</h3></div>
-      <div style="display:grid; gap:10px;">
-        <div class="copy-card">
-          <div><span class="framework">AIDA</span> ¿Cansada de la hinchazón? Descubrí 50 recetas sin azúcar que transforman tu cuerpo en 7 días.</div>
-          <div class="meta"><span>📱 WhatsApp</span><span>✅ Activo</span><span>🔥 3 envios</span></div>
-        </div>
-        <div class="copy-card">
-          <div><span class="framework">PAS</span> ¿Te suena familiar? Comés "sano" pero los antojos no te dejan en paz. El problema no sos vos, es el azúcar oculta.</div>
-          <div class="meta"><span>📧 Email</span><span>⏳ Borrador</span></div>
-        </div>
-        <div class="copy-card">
-          <div><span class="framework">AIDA</span> 50 recetas. 0 azúcar. Resultados desde la semana 1. El sistema que estabas esperando.</div>
-          <div class="meta"><span>📱 WhatsApp</span><span>✅ Activo</span><span>🔥 7 envios</span></div>
-        </div>
-      </div>
+  <div class="section" id="copies">
+    <div class="section-header"><h3>💡 Copies Generados</h3></div>
+    <div class="empty-state" style="padding:30px 20px;">
+      <div class="icon">🤖</div>
+      <h4>Esperando al bot</h4>
+      <p>Cuando el bot autónomo esté corriendo, aquí aparecerán los copies AIDA/PAS que genere automáticamente.</p>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-header"><h3>📢 Rendimiento de Anuncios</h3><a href="#" class="btn-sm">+ Nuevo</a></div>
-    <div class="card" style="padding:0; overflow:auto;">
+  <div class="section" id="ads">
+    <div class="section-header"><h3>📢 Anuncios</h3></div>
+    <div class="card" style="padding:0;">
       <table>
-        <thead><tr><th>Campaña</th><th>Inversión</th><th>Impresiones</th><th>Clics</th><th>CTR</th><th>Leads</th><th>CPA</th><th>Estado</th></tr></thead>
-        <tbody>
-          <tr><td>Sabor Sin Culpa - Prospecting</td><td>$0.00</td><td>0</td><td>0</td><td>0%</td><td>0</td><td>$0</td><td><span class="tag orange">Borrador</span></td></tr>
-          <tr><td>Sabor Sin Culpa - Retarget</td><td>$0.00</td><td>0</td><td>0</td><td>0%</td><td>0</td><td>$0</td><td><span class="tag orange">Borrador</span></td></tr>
-        </tbody>
+        <thead><tr><th>Campaña</th><th>Inversión</th><th>Impresiones</th><th>Clics</th><th>Leads</th><th>Estado</th></tr></thead>
+        <tbody><tr><td colspan="6"><div class="empty-state" style="padding:20px;"><h4 style="font-size:0.8rem;">Sin campañas aún</h4><p style="font-size:0.75rem;">Conectá Meta Ads o creá tu primera campaña</p></div></td></tr></tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="section" id="config">
+    <div class="section-header"><h3>⚙️ Pendiente: Base de Datos</h3></div>
+    <div class="card">
+      <p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px;">Los leads se guardan en memoria temporal. Para que persistan:</p>
+      <ol class="setup-steps">
+        <li>1. Andá a <strong style="color:var(--text)">supabase.com</strong> → "New project"</li>
+        <li>2. Copiá <strong style="color:var(--text)">Project URL</strong> y <strong style="color:var(--text)">Service Role Key</strong> (Settings → API)</li>
+        <li>3. En SQL Editor, ejecutá el contenido de <strong style="color:var(--text)">supabase-schema.sql</strong></li>
+        <li>4. En Vercel → Settings → Environment Variables, agregá:
+          <code style="display:block;background:var(--surface);padding:8px;border-radius:6px;margin-top:4px;font-size:0.75rem;">
+SUPABASE_URL=tu-project-url<br>
+SUPABASE_SERVICE_KEY=tu-service-role-key
+          </code>
+        </li>
+        <li>5. Redeploy en Vercel</li>
+      </ol>
     </div>
   </div>
 </div>
 
 <script>
 const API = window.location.origin + "/api/leads";
+let chart = null;
 
-function addActivity(icon, text, color) {
+function scrollTo(id) {
+  document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  if (id === 'top') { window.scrollTo({top:0,behavior:'smooth'}); return; }
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+}
+
+function addActivity(icon, text, color, time) {
   const feed = document.getElementById("activityFeed");
   const empty = feed.querySelector(".empty-state");
   if (empty) empty.remove();
   const item = document.createElement("div");
   item.className = "activity-item";
-  item.innerHTML = `<div class="dot ${color}"></div><div><div>${text}</div><div class="time">${new Date().toLocaleTimeString("es-AR")}</div></div>`;
+  item.innerHTML = `<div class="dot ${color}"></div><div>${icon} ${text}<div class="time">${time || new Date().toLocaleTimeString("es-AR")}</div></div>`;
   feed.prepend(item);
-  if (feed.children.length > 20) feed.lastChild.remove();
+  while (feed.children.length > 15) feed.lastChild.remove();
 }
 
-async function loadLeads() {
+async function loadData() {
   try {
     const res = await fetch(API);
     const data = await res.json();
-    document.getElementById("lastUpdate").textContent = "Última actualización: " + new Date(data.lastUpdate).toLocaleTimeString("es-AR");
 
+    document.getElementById("lastUpdate").textContent = "Actualizado " + new Date(data.lastUpdate).toLocaleTimeString("es-AR");
     document.getElementById("totalLeads").textContent = data.total;
-    document.getElementById("leadCount").textContent = data.total + " registros";
-    const todayEl = document.querySelector(".stat-card .change.up");
-    if (todayEl) todayEl.textContent = `+${data.today} hoy`;
+    document.getElementById("todayLeads").textContent = data.today + " hoy";
+    document.getElementById("leadCount").textContent = data.total;
 
     const tbody = document.getElementById("leadBody");
     if (data.leads && data.leads.length) {
-      tbody.innerHTML = data.leads.slice().reverse().map(l => `
-        <tr>
-          <td><strong>${l.name}</strong></td>
-          <td>${l.email}</td>
-          <td>${l.whatsapp}</td>
-          <td><span class="tag">${l.product}</span></td>
-          <td>${new Date(l.timestamp).toLocaleTimeString("es-AR")}</td>
-        </tr>
+      tbody.innerHTML = data.leads.slice(0,20).map(l => `
+        <tr><td>${l.name}</td><td>${l.whatsapp}</td><td>${l.product}</td><td>${new Date(l.timestamp).toLocaleTimeString("es-AR")}</td></tr>
       `).join("");
+      addActivity("📩", `Lead: ${data.leads[0].name} - ${data.leads[0].product}`, "green", new Date(data.leads[0].timestamp).toLocaleTimeString("es-AR"));
+    } else {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state" style="padding:24px;"><h4 style="font-size:0.85rem;">Sin leads aún</h4><p style="font-size:0.75rem;">Compartí la landing page para recibir tus primeros leads</p></div></td></tr>`;
     }
-    if (data.leads && data.leads.length > 0) {
-      addActivity("💚", `Nuevo lead: ${data.leads[data.leads.length-1].name} - ${data.leads[data.leads.length-1].product}`, "green");
+
+    const statusBar = document.getElementById("statusBar");
+    const dbEl = document.getElementById("dbStatus");
+    const dbSub = document.getElementById("dbSub");
+    if (data.storage === "database") {
+      statusBar.innerHTML = '<span><span class="status-dot green"></span> Sistema OK</span><span><span class="status-dot green"></span> Base de datos conectada</span>';
+      dbEl.textContent = "✅"; dbSub.textContent = "Supabase activa";
+    } else {
+      dbEl.textContent = "⚠️"; dbSub.textContent = "Datos temporales (sin persistencia)";
     }
   } catch (e) {
-    console.log("Waiting for leads...");
+    addActivity("⚠️", "Error al cargar datos del servidor", "yellow");
   }
 }
 
-loadLeads();
-setInterval(loadLeads, 10000);
-
 addActivity("🚀", "Dashboard iniciado", "green");
 addActivity("📱", "WhatsApp worker conectado", "green");
-addActivity("🌐", "Landing page online", "green");
-addActivity("💻", "Sistema operativo", "purple");
-
-new Chart(document.getElementById("leadsChart"), {
-  type: "bar",
-  data: {
-    labels: ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],
-    datasets: [{
-      label: "Leads",
-      data: [0,0,0,0,0,0,0],
-      backgroundColor: "rgba(0,245,212,0.2)",
-      borderColor: "rgba(0,245,212,0.8)",
-      borderWidth: 1,
-      borderRadius: 4,
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { color: "rgba(255,255,255,0.03)" }, ticks: { color: "#6b6b8d" } },
-      y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.03)" }, ticks: { color: "#6b6b8d" } }
-    }
-  }
-});
+addActivity("🌐", "Landing page online: auto-afiliados.vercel.app", "green");
+addActivity("💡", "Falta conectar base de datos permanente", "yellow");
+loadData();
+setInterval(loadData, 15000);
 </script>
 </body>
 </html>
