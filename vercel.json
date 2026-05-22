@@ -7,6 +7,6 @@
       "maxDuration": 10
     }
   },
-  "installCommand": "echo 'No external dependencies needed'",
-  "buildCommand": ""
+  "installCommand": "echo 'No deps needed'",
+  "buildCommand": ":"
 }
