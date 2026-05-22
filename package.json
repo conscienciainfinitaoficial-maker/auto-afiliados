@@ -1,76 +1,26 @@
 {
   "name": "auto-afiliados",
   "version": "1.0.0",
-  "description": "Auto-Afiliados - Bot Autónomo de Marketing de Afiliados (fork de Conway Automaton)",
+  "description": "Auto-Afiliados - Bot Autonomo de Marketing de Afiliados",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./config.js": {
-      "types": "./dist/config.d.ts",
-      "default": "./dist/config.js"
-    },
-    "./state/database.js": {
-      "types": "./dist/state/database.d.ts",
-      "default": "./dist/state/database.js"
-    }
-  },
-  "bin": {
-    "auto-afiliados": "dist/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "homepage": "",
-  "keywords": [
-    "affiliate-marketing",
-    "autonomous-agent",
-    "ai-sales",
-    "hotmart",
-    "auto-afiliados"
-  ],
-  "license": "MIT",
   "scripts": {
     "build": "tsc && pnpm -r build",
     "dev": "tsx watch src/index.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "test:coverage": "vitest run --coverage",
-    "test:security": "vitest run --grep 'security|injection|policy'",
-    "test:financial": "vitest run --grep 'financial|spend|treasury'",
-    "test:ci": "vitest run --reporter=verbose",
-    "clean": "rm -rf dist && pnpm -r clean"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.0",
     "better-sqlite3": "^11.0.0",
-    "chalk": "^5.3.0",
-    "cron-parser": "^4.9.0",
-    "gray-matter": "^4.0.3",
-    "js-tiktoken": "^1.0.21",
     "openai": "^6.24.0",
-    "ora": "^8.0.0",
-    "simple-git": "^3.24.0",
-    "@solana/web3.js": "^1.98.0",
-    "bs58": "^6.0.0",
-    "siwe": "^2.3.0",
-    "tweetnacl": "^1.0.3",
-    "ulid": "^2.3.0",
-    "viem": "^2.44.2",
-    "yaml": "^2.4.0"
+    "viem": "^2.44.2"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
-    "tsx": "^4.7.0",
     "typescript": "^5.9.3",
+    "tsx": "^4.7.0",
     "vitest": "^2.0.0"
   },
+  "license": "MIT",
   "engines": {
-    "node": ">=20.0.0"
-  },
+    "node": ">=18.0.0"
+  }
 }
