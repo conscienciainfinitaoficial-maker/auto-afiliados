@@ -1,0 +1,19 @@
+{
+  "name": "auto-afiliados",
+  "genesisPrompt": "Eres un bot autónomo de marketing de afiliados. Buscas productos, generas copies AIDA/PAS, y maximizas conversiones.",
+  "creatorAddress": "0xTU_DIRECCION_ETH_AQUI",
+  "ollamaBaseUrl": "http://172.21.192.1:11434",
+  "inferenceModel": "gpt-5-mini",
+  "treasuryPolicy": {
+    "masterWalletAddress": "0xTU_MASTER_WALLET_AQUI",
+    "masterSplitRatio": 0.8,
+    "selfMaintenanceRatio": 0.2,
+    "sweepIntervalHours": 12
+  },
+  "notificationConfig": {
+    "telegramBotToken": "TU_TELEGRAM_BOT_TOKEN",
+    "telegramChatId": "TU_CHAT_ID"
+  },
+  "maxChildren": 3,
+  "version": "0.2.1"
+}

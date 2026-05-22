@@ -1,7 +1,7 @@
 {
-  "name": "@conway/automaton",
-  "version": "0.2.1",
-  "description": "Conway Automaton - Sovereign AI Agent Runtime",
+  "name": "auto-afiliados",
+  "version": "1.0.0",
+  "description": "Auto-Afiliados - Bot Autónomo de Marketing de Afiliados (fork de Conway Automaton)",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,20 +20,19 @@
     }
   },
   "bin": {
-    "automaton": "dist/index.js",
-    "conway-automaton": "dist/index.js"
+    "auto-afiliados": "dist/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Conway-Research/automaton.git"
+    "url": ""
   },
-  "homepage": "https://conway.tech",
+  "homepage": "",
   "keywords": [
+    "affiliate-marketing",
     "autonomous-agent",
-    "sovereign-ai",
-    "web4",
-    "conway",
-    "self-replicating"
+    "ai-sales",
+    "hotmart",
+    "auto-afiliados"
   ],
   "license": "MIT",
   "packageManager": "pnpm@10.28.1",

@@ -3,7 +3,7 @@ import path from "path";
 import chalk from "chalk";
 import type { AutomatonConfig, TreasuryPolicy } from "../types.js";
 import { DEFAULT_TREASURY_POLICY } from "../types.js";
-import { getWallet, getAutomatonDir } from "../identity/wallet.js";
+import { getWallet, getAutomatonDir, saveMasterWalletAddress } from "../identity/wallet.js";
 import { provision } from "../identity/provision.js";
 import { createConfig, saveConfig } from "../config.js";
 import { writeDefaultHeartbeatConfig } from "../heartbeat/config.js";
@@ -124,11 +124,37 @@ export async function runSetupWizard(): Promise<AutomatonConfig> {
     console.log(chalk.dim("  No provider keys set. Inference will default to Conway.\n"));
   }
 
+  // ─── Master Wallet (Creator's Treasury) ───────────────────────
+  console.log(chalk.cyan("  Master Wallet Configuration"));
+  console.log(chalk.dim("  This is YOUR wallet where 80% of profits will be sent.\n"));
+
+  const masterWalletAddress = await promptAddress(
+    "Your Master Wallet address (receives 80% of profits)", walletChainType
+  );
+  if (masterWalletAddress) {
+    saveMasterWalletAddress(masterWalletAddress);
+    console.log(chalk.green(`  Master wallet: ${masterWalletAddress}\n`));
+  } else {
+    console.log(chalk.yellow("  No master wallet set. Configure later with --configure\n"));
+  }
+
+  const splitStr = await promptWithDefault("Profit split to master (%)", 80);
+  const masterSplit = parseInt(String(splitStr), 10) / 100;
+  const selfMaintenance = 1 - masterSplit;
+
+  const sweepHours = await promptWithDefault("Profit sweep interval (hours)", 12);
+  console.log(chalk.green(`  Split: ${Math.round(masterSplit * 100)}% master / ${Math.round(selfMaintenance * 100)}% infra`));
+  console.log(chalk.green(`  Sweep every ${sweepHours} hours\n`));
+
   // ─── Financial Safety Policy ─────────────────────────────────
   console.log(chalk.cyan("  Financial Safety Policy"));
   console.log(chalk.dim("  These limits protect against unauthorized spending. Press Enter for defaults.\n"));
 
   const treasuryPolicy: TreasuryPolicy = {
+    masterWalletAddress: masterWalletAddress || undefined,
+    masterSplitRatio: masterSplit,
+    selfMaintenanceRatio: selfMaintenance,
+    sweepIntervalHours: parseInt(String(sweepHours), 10),
     maxSingleTransferCents: await promptWithDefault(
       "Max single transfer (cents)", DEFAULT_TREASURY_POLICY.maxSingleTransferCents),
     maxHourlyTransferCents: await promptWithDefault(

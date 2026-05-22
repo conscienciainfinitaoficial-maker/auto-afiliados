@@ -36,6 +36,7 @@ import { prettySink } from "./observability/pretty-sink.js";
 import { bootstrapTopup } from "./conway/topup.js";
 import { randomUUID } from "crypto";
 import { keccak256, toHex } from "viem";
+import { setNotificationConfig, notifyStartup } from "./identity/notifications.js";
 
 const logger = createLogger("main");
 const VERSION = "0.2.1";
@@ -191,6 +192,13 @@ async function run(): Promise<void> {
   if (!config) {
     const { runSetupWizard } = await import("./setup/wizard.js");
     config = await runSetupWizard();
+  }
+
+  // Initialize notification system (Telegram)
+  if (config.notificationConfig) {
+    setNotificationConfig(config.notificationConfig);
+    logger.info("Telegram notifications enabled");
+    notifyStartup().catch((err) => logger.error("Failed to send startup notification", err));
   }
 
   // Load wallet (chain-aware)

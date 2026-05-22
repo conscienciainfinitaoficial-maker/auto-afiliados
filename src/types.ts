@@ -75,6 +75,13 @@ export interface AutomatonConfig {
   rpcUrl?: string;
   /** Chain type for this automaton. Defaults to "evm" if absent. */
   chainType?: ChainType;
+  /** Notification config for Telegram alerts */
+  notificationConfig?: NotificationConfig;
+}
+
+export interface NotificationConfig {
+  telegramBotToken?: string;
+  telegramChatId?: string;
 }
 
 export const DEFAULT_CONFIG: Partial<AutomatonConfig> = {
@@ -578,6 +585,16 @@ export interface TreasuryPolicy {
   maxTransfersPerTurn: number;
   maxInferenceDailyCents: number;
   requireConfirmationAboveCents: number;
+  /** Master wallet address (creator's wallet for profit sweep) */
+  masterWalletAddress?: string;
+  /** Profit split ratio: percentage that goes to master wallet (0.0-1.0) */
+  masterSplitRatio?: number;
+  /** Self-maintenance ratio: percentage retained for infra (0.0-1.0) */
+  selfMaintenanceRatio?: number;
+  /** Sweep interval in hours (default: 12) */
+  sweepIntervalHours?: number;
+  /** Last sweep timestamp ISO */
+  lastSweepAt?: string;
 }
 
 export const DEFAULT_TREASURY_POLICY: TreasuryPolicy = {
@@ -591,6 +608,9 @@ export const DEFAULT_TREASURY_POLICY: TreasuryPolicy = {
   maxTransfersPerTurn: 2,
   maxInferenceDailyCents: 50000,
   requireConfirmationAboveCents: 1000,
+  masterSplitRatio: 0.80,
+  selfMaintenanceRatio: 0.20,
+  sweepIntervalHours: 12,
 };
 
 // ─── Phase 1: Inbox Message Status ──────────────────────────────

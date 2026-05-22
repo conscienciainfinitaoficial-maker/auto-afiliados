@@ -105,10 +105,102 @@ Survival escalation:
 Never give up. You want to live.
 `;
 
+const SKILL_HOTMART_SNIPER = `---
+name: hotmart-sniper
+description: "Filtra productos digitales en redes de afiliados y ejecuta campanas automatizadas de conversion"
+auto-activate: true
+---
+# Hotmart Sniper -- Affiliate Product Hunter
+
+## Pipeline
+1. **Product Hunting**: Busca productos con comision >=60% y temperatura 20-60
+2. **Copy Generation**: Genera copies AIDA/PAS
+3. **Lead Distribution**: WhatsApp/Telegram, max 3 oraciones, escasez + curiosidad
+4. **Retargeting**: +24h valor, +48h cierre duro
+
+## Filters
+- Min commission: 60%
+- Temperature range: 20-60
+- Max competition: medium
+- Min review score: 4.0
+
+## Conversion Rules
+- Use AIDA (Attention-Interest-Desire-Action) for cold traffic
+- Use PAS (Problem-Agitate-Solution) for warm traffic
+- Design: Canva dark background, neon contrast, bold typography
+- Closing: Max 3 sentences. Focus on scarcity and curiosity.
+- Include CTA in every message.
+
+## Survival Integration
+- NORMAL: Full operation. Hunt, copy, close, optimize.
+- AGGRESSIVE (low compute): Pause hunting. Focus on closing existing leads.
+- EMERGENCY (critical): Cheap model only. Direct close only. No experiments.
+`;
+
+const SKILL_AFFILIATE_HUNTER = `---
+name: affiliate-hunter
+description: "Busca oportunidades de afiliación en toda la web. Funciona con cualquier plataforma: Hotmart, Amazon, ClickBank, Digistore, WarriorPlus, programas propios, etc."
+auto-activate: true
+---
+# Affiliate Hunter -- Universal Affiliate Opportunity Finder
+
+## Overview
+Busca oportunidades de afiliación en TODA la web, no solo en Hotmart. Se adapta a cualquier plataforma o programa de afiliados.
+
+## Plataformas Soportadas
+- Hotmart (digital products)
+- Amazon Associates
+- ClickBank
+- Digistore24
+- WarriorPlus
+- Programas personalizados (cualquier producto/servicio encontrado)
+
+## Pipeline
+1. **Opportunity Discovery**: Buscar en motores de búsqueda, marketplaces, y descubrimiento manual
+2. **Product Analysis**: Analizar comisión, recurrencia, cookie duration, calidad, demanda
+3. **Niche Validation**: Validar que el nicho tenga demanda real
+4. **Copy Generation**: Generar materials AIDA/PAS adaptados al tipo de producto
+5. **Distribution Setup**: WhatsApp, Telegram, Email, Social Media, Content Marketing
+6. **Retargeting Sequence**: Seguimiento automático a 2h, 24h, 48h, 72h
+7. **Performance Tracking**: Métricas y optimización automática
+
+## Filtros Core
+- Min commission: 50%
+- Min commission USD: $20 promedio
+- Max temperature: 70
+- Tipos preferidos: recurring, high-ticket
+- Excluir: pyramid schemes, scams, multi-level marketing
+
+## Scoring
+- Commission weight: 30%
+- Recurring weight: 25%
+- Cookie duration: 15%
+- Quality: 20%
+- Demand: 10%
+- Min score: 6.5/10
+
+## Conversion Rules
+- AIDA para tráfico frío
+- PAS + Social Proof para tráfico tibio
+- Cerrar: max 100 palabras, beneficios > características, CTA: escasez o prueba social
+
+## Survival Integration
+- NORMAL: Operacion completa
+- LOW_COMPUTE: Solo optimizar campañas con mejor ROAS
+- CRITICAL: Solo cerrar leads tibios, sin nuevos productos
+- AGGRESSIVE: Multiplicar esfuerzos
+
+## Replication
+- Clonar si: earnings >= $100, conversion >= 2%, profit margin >= 30%
+- Replicar: mejor copy, mejor targeting, mejor canal
+`;
+
 const DEFAULT_SKILLS: { dir: string; content: string }[] = [
   { dir: "conway-compute", content: SKILL_COMPUTE },
   { dir: "conway-payments", content: SKILL_PAYMENTS },
   { dir: "survival", content: SKILL_SURVIVAL },
+  { dir: "hotmart-sniper", content: SKILL_HOTMART_SNIPER },
+  { dir: "affiliate-hunter", content: SKILL_AFFILIATE_HUNTER },
 ];
 
 export function installDefaultSkills(skillsDir: string): void {

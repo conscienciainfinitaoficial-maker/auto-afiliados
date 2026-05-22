@@ -69,7 +69,12 @@ export function generateSolanaKeypair(): { secretKey: Uint8Array; publicKey: Uin
 }
 
 /**
- * Get or create the automaton's wallet.
+ * Master wallet file path, stored alongside the automaton's own wallet.
+ */
+const MASTER_WALLET_FILE = path.join(AUTOMATON_DIR, "master-wallet.json");
+
+/**
+ * Get or create the automaton's (worker) wallet.
  * The private key IS the automaton's identity -- protect it.
  *
  * @param chainType - If creating a new wallet, which chain to use. Defaults to "evm".
@@ -202,4 +207,37 @@ export function getWalletChainType(): ChainType {
 
 export function walletExists(): boolean {
   return fs.existsSync(WALLET_FILE);
+}
+
+// ─── Master Wallet (Creator's Treasury) ─────────────────────────
+
+/**
+ * Save the master wallet address (creator's wallet for profit sweeps).
+ */
+export function saveMasterWalletAddress(address: string): void {
+  const data = {
+    address,
+    savedAt: new Date().toISOString(),
+  };
+  fs.writeFileSync(MASTER_WALLET_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
+}
+
+/**
+ * Get the master wallet address.
+ */
+export function getMasterWalletAddress(): string | null {
+  try {
+    if (!fs.existsSync(MASTER_WALLET_FILE)) return null;
+    const data = JSON.parse(fs.readFileSync(MASTER_WALLET_FILE, "utf-8"));
+    return data.address || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check if a master wallet has been configured.
+ */
+export function masterWalletConfigured(): boolean {
+  return fs.existsSync(MASTER_WALLET_FILE);
 }

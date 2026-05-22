@@ -38,8 +38,11 @@ function isLoopbackHttpUrl(url: string | undefined): boolean {
   try {
     const parsed = new URL(url);
     const host = parsed.hostname.toLowerCase();
+    // Allow HTTP for localhost, any private/loopback IP, or when explicit Ollama URL is given
     return parsed.protocol.toLowerCase() === "http:" &&
-      (host === "localhost" || host === "127.0.0.1" || host === "::1");
+      (host === "localhost" || host === "127.0.0.1" || host === "::1" ||
+       host.startsWith("172.") || host.startsWith("10.") || host.startsWith("192.168.") ||
+       host === "0.0.0.0");
   } catch {
     return false;
   }
@@ -135,10 +138,10 @@ export function createInferenceClient(
    */
   const setLowComputeMode = (enabled: boolean): void => {
     if (enabled) {
-      currentModel = options.lowComputeModel || "gpt-5-mini";
+      currentModel = options.lowComputeModel || options.defaultModel || "gpt-5-mini";
       maxTokens = 4096;
     } else {
-      currentModel = options.defaultModel;
+      currentModel = options.defaultModel || "gpt-5-mini";
       maxTokens = options.maxTokens;
     }
   };
@@ -196,6 +199,8 @@ function resolveInferenceBackend(
   // Heuristic fallback (model not in registry yet)
   if (keys.anthropicApiKey && /^claude/i.test(model)) return "anthropic";
   if (keys.openaiApiKey && /^(gpt-[3-9]|gpt-4|gpt-5|o[1-9][-\s.]|o[1-9]$|chatgpt)/i.test(model)) return "openai";
+  // If Ollama is configured, route unknown models to it (local inference)
+  if (keys.ollamaBaseUrl) return "ollama";
   return "conway";
 
 }

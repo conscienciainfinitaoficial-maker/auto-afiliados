@@ -1,0 +1,173 @@
+{
+  "skill_name": "affiliate_hunter",
+  "version": "1.0.0",
+  "description": "Busca oportunidades de afiliación en toda la web. Adaptable a cualquier plataforma: Hotmart, Amazon, ClickBank, Digistore, WarriorPlus, programas propios, etc.",
+  "auto_activate": true,
+  "triggers": {
+    "on_low_compute": true,
+    "on_startup": true,
+    "interval_minutes": 720
+  },
+  "core_filters": {
+    "min_commission_percent": 50,
+    "min_average_commission_usd": 20,
+    "max_temperature": 70,
+    "preferred_commission_type": ["recurring", "high_ticket"],
+    "exclude_programs": ["scam", "pyramid", "multi_level"],
+    "min_producer_reputation": 7
+  },
+  "platforms": {
+    "generic": {
+      "enabled": true,
+      "search_strategy": "web_scraping",
+      "target_domains": []
+    },
+    "hotmart": {
+      "enabled": true,
+      "search_strategy": "api_or_scraping",
+      "filters": {
+        "commission": ">= 50%",
+        "recurring": "preferred"
+      }
+    },
+    "amazon_associates": {
+      "enabled": true,
+      "search_strategy": "api_or_scraping",
+      "categories": ["books", "electronics", "courses", "software"]
+    },
+    "clickbank": {
+      "enabled": true,
+      "search_strategy": "marketplace",
+      "filters": "gravity >= 10, earn per click >= $5"
+    },
+    "digistore24": {
+      "enabled": true,
+      "search_strategy": "marketplace"
+    },
+    "warriorplus": {
+      "enabled": true,
+      "search_strategy": "marketplace"
+    },
+    "custom_programs": {
+      "enabled": true,
+      "search_strategy": "manual_discovery",
+      "description": "Programas de afiliados de productos/servicios descubiertos en la web"
+    }
+  },
+  "pipeline": [
+    {
+      "step": "opportunity_discovery",
+      "description": "Buscar oportunidades de afiliación en múltiples fuentes",
+      "sources": [
+        {"type": "search_engine", "query_templates": [
+          "best affiliate programs 2025",
+          "high commission affiliate program",
+          "recurring affiliate income",
+          "digital products affiliate program",
+          "SaaS affiliate program high commission"
+        ]},
+        {"type": "marketplace", "platforms": ["hotmart", "clickbank", "digistore24", "warriorplus"]},
+        {"type": "manual_discovery", "description": "Productos/servicios que el bot encuentra en la web"}
+      ],
+      "output": "opportunity_candidates.json"
+    },
+    {
+      "step": "product_analysis",
+      "description": "Analizar cada oportunidad encontrada",
+      "checks": [
+        "commission_structure",
+        "cookie_duration",
+        "payment_reliability",
+        "product_quality",
+        "market_demand",
+        "competition_level"
+      ],
+      "scoring": {
+        "commission_weight": 0.3,
+        "recurring_weight": 0.25,
+        "cookie_weight": 0.15,
+        "quality_weight": 0.2,
+        "demand_weight": 0.1
+      },
+      "min_score": 6.5
+    },
+    {
+      "step": "niche_validation",
+      "description": "Validar que el nicho tenga demanda real",
+      "metrics": [
+        "search_volume",
+        "social_engagement",
+        "community_size",
+        "trending_signals"
+      ]
+    },
+    {
+      "step": "copy_generation",
+      "description": "Generar materiales de conversión adaptados al tipo de producto",
+      "frameworks": ["AIDA", "PAS", "PAS + Social Proof"],
+      "formats": [
+        {"type": "headline", "count": 10},
+        {"type": "social_post", "platforms": ["instagram", "facebook", "tiktok", "linkedin"], "count": 3},
+        {"type": "whatsapp_sequence", "count": 4},
+        {"type": "email_sequence", "count": 5},
+        {"type": "landing_page_outline", "count": 1}
+      ],
+      "design_prompt": "Profesional, confianza, escasez. Colores: azul/verde corporativo o neon oscuro",
+      "output": "campaign_materials/"
+    },
+    {
+      "step": "distribution_setup",
+      "description": "Configurar canales de distribución según el producto",
+      "channels": [
+        {"name": "whatsapp", "priority": 1, "use_case": "products_with_whatsapp_support"},
+        {"name": "telegram", "priority": 2, "use_case": "digital_products"},
+        {"name": "email", "priority": 3, "use_case": "all_products"},
+        {"name": "social_media", "priority": 4, "use_case": "awareness_phase"},
+        {"name": "content_marketing", "priority": 5, "use_case": "seo_affiliate_links"}
+      ],
+      "closer_protocol": {
+        "max_words": 100,
+        "focus": "benefits_over_features",
+        "cta_type": "scarcity_or_social_proof"
+      }
+    },
+    {
+      "step": "retargeting_sequence",
+      "description": "Seguimiento automático de leads",
+      "schedule": [
+        {"delay_hours": 2, "type": "soft_follow", "content": "valor + pregunta"},
+        {"delay_hours": 24, "type": "testimonial", "content": "historia_de_exito"},
+        {"delay_hours": 48, "type": "urgency", "content": "escases_tiempo"},
+        {"delay_hours": 72, "type": "last_chance", "content": "bonus_extra"}
+      ]
+    },
+    {
+      "step": "performance_tracking",
+      "description": "Rastrear y optimizar el rendimiento",
+      "metrics": [
+        "clicks",
+        "conversions",
+        "earnings",
+        "cost_per_click",
+        "roi"
+      ],
+      "optimization": {
+        "auto_adjust": true,
+        "test_variants": true,
+        "kill_underperformers": true
+      }
+    }
+  ],
+  "survival_integration": {
+    "on_low_compute": "Pausar discovery. Solo optimizar campañas existentes con mejor ROAS.",
+    "on_critical": "Modo supervivencia: solo cerrar leads tibios. Sin nuevos productos.",
+    "on_normal": "Operacion completa: discovery, analisis, copy, cierre, optimizacion.",
+    "on_aggressive": "Multiplicar esfuerzos: mas productos, mas canales, mas volumen."
+  },
+  "replication_criteria": {
+    "min_earnings_for_clone": 100,
+    "min_conversion_rate": 0.02,
+    "min_profit_margin": 0.3,
+    "replicate_with": ["best_converting_copy", "best_targeting", "best_channel"]
+  }
+}

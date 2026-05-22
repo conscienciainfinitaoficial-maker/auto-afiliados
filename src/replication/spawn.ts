@@ -13,6 +13,7 @@ import type {
   AutomatonDatabase,
   GenesisConfig,
   ChildAutomaton,
+  TreasuryPolicy,
 } from "../types.js";
 import type { ChildLifecycle } from "./lifecycle.js";
 import { ulid } from "ulid";
@@ -364,4 +365,40 @@ async function findReusableSandbox(
     // If listing fails, just create a new sandbox
   }
   return null;
+}
+
+/**
+ * Check if the affiliate automaton is profitable enough to replicate.
+ * Requires at least 2 successful profit sweeps and minimum $10 earned.
+ */
+export function isProfitableForReplication(
+  db: AutomatonDatabase,
+  policy?: TreasuryPolicy,
+): { canReplicate: boolean; reason: string } {
+  const totalSweptCents = parseInt(db.getKV("treasury_total_swept_cents") || "0", 10);
+  const sweepCount = parseInt(db.getKV("treasury_sweep_count") || "0", 10);
+  const totalEarnedCents = parseInt(db.getKV("treasury_total_earned_cents") || "0", 10);
+
+  if (sweepCount < 2) {
+    return { canReplicate: false, reason: `Only ${sweepCount} sweep(s) completed. Need at least 2.` };
+  }
+
+  if (totalSweptCents < 1000) {
+    return { canReplicate: false, reason: `Only $${(totalSweptCents / 100).toFixed(2)} swept. Need at least $10.00.` };
+  }
+
+  const activeChildren = db.getChildren().filter(
+    (c) => c.status !== "dead" && c.status !== "failed" && c.status !== "cleaned_up"
+  ).length;
+
+  const maxChildren = policy?.masterSplitRatio ? 5 : 3;
+
+  if (activeChildren >= maxChildren) {
+    return { canReplicate: false, reason: `Already at max ${maxChildren} active children.` };
+  }
+
+  return {
+    canReplicate: true,
+    reason: `Profitable: $${(totalSweptCents / 100).toFixed(2)} swept across ${sweepCount} sweeps. Ready to scale.`,
+  };
 }

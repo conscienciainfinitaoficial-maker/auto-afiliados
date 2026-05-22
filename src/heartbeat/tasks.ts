@@ -14,7 +14,9 @@ import type {
   HeartbeatLegacyContext,
   HeartbeatTaskFn,
   SurvivalTier,
+  TreasuryPolicy,
 } from "../types.js";
+import { DEFAULT_TREASURY_POLICY } from "../types.js";
 import type { HealthMonitor as ColonyHealthMonitor } from "../orchestration/health-monitor.js";
 import { sanitizeInput } from "../agent/injection-defense.js";
 import { getSurvivalTier } from "../conway/credits.js";
@@ -701,6 +703,65 @@ export const BUILTIN_TASKS: Record<string, HeartbeatTaskFn> = {
       return { shouldWake: false };
     } catch (error) {
       logger.error("dead_agent_cleanup failed", error instanceof Error ? error : undefined);
+      return { shouldWake: false };
+    }
+  },
+
+  // ─── Affiliate: Profit Sweep ───────────────────────────────────
+  treasury_sweep: async (_ctx: TickContext, taskCtx: HeartbeatLegacyContext) => {
+    try {
+      const { isSweepDue, executeProfitSweep } = await import("../identity/treasury.js");
+      const policy: TreasuryPolicy = { ...DEFAULT_TREASURY_POLICY, ...(taskCtx.config.treasuryPolicy || {}) };
+      if (!policy.masterWalletAddress) return { shouldWake: false };
+
+      if (isSweepDue(taskCtx.db, policy)) {
+        const result = await executeProfitSweep(
+          taskCtx.conway, taskCtx.identity, taskCtx.db, policy
+        );
+        if (result.swept) {
+          logger.info(
+            `Sweep: $${(result.masterAmountCents / 100).toFixed(2)} to master, ` +
+            `$${(result.retainedAmountCents / 100).toFixed(2)} retained`
+          );
+        }
+      }
+      return { shouldWake: false };
+    } catch (error) {
+      logger.error("treasury_sweep failed", error instanceof Error ? error : undefined);
+      return { shouldWake: false };
+    }
+  },
+
+  // ─── Affiliate: Check for profitable replication ───────────────
+  affiliate_replication_check: async (_ctx: TickContext, taskCtx: HeartbeatLegacyContext) => {
+    try {
+      const totalSwept = parseInt(taskCtx.db.getKV("treasury_total_swept_cents") || "0", 10);
+      const sweepCount = parseInt(taskCtx.db.getKV("treasury_sweep_count") || "0", 10);
+
+      // Only replicate if we've had at least 2 successful sweeps and more than $10 earned
+      if (sweepCount >= 2 && totalSwept >= 1000) {
+        const children = taskCtx.db.getChildren();
+        const activeChildren = children.filter(
+          (c) => c.status !== "dead" && c.status !== "failed" && c.status !== "cleaned_up"
+        ).length;
+        const maxChildren = taskCtx.config.maxChildren || 3;
+
+        if (activeChildren < maxChildren) {
+          taskCtx.db.setKV("replication_ready", JSON.stringify({
+            ready: true,
+            totalSweptCents: totalSwept,
+            sweepCount,
+            timestamp: new Date().toISOString(),
+          }));
+          return {
+            shouldWake: true,
+            message: `Profitable: $${(totalSwept / 100).toFixed(2)} swept. Ready to replicate.`,
+          };
+        }
+      }
+      return { shouldWake: false };
+    } catch (error) {
+      logger.error("affiliate_replication_check failed", error instanceof Error ? error : undefined);
       return { shouldWake: false };
     }
   },

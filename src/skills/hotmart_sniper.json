@@ -1,0 +1,105 @@
+{
+  "skill_name": "hotmart_sniper",
+  "version": "1.0.0",
+  "description": "Filtra productos digitales en redes de afiliados y ejecuta campañas automatizadas de conversión.",
+  "auto_activate": true,
+  "triggers": {
+    "on_low_compute": true,
+    "on_startup": true,
+    "interval_minutes": 1440
+  },
+  "core_filters": {
+    "min_commission_percent": 60,
+    "min_temperature": 20,
+    "max_temperature": 60,
+    "max_competition": "medium",
+    "min_review_score": 4.0,
+    "exclude_categories": ["saude_prescrita", "investimentos_promessa"]
+  },
+  "pipeline": [
+    {
+      "step": "product_hunting",
+      "description": "Buscar productos con alta comision y demanda caliente",
+      "sources": ["hotmart", "monetize", "impact", "generic_api"],
+      "filters": {
+        "commission": ">= 60%",
+        "temperature": "20-60",
+        "recurring": "preferred"
+      },
+      "output": "product_candidates.json"
+    },
+    {
+      "step": "competitive_analysis",
+      "description": "Analizar la competencia del producto y su potencial de conversion",
+      "checks": [
+        "cantidad_de_afiliados",
+        "calidad_de_materiales_existentes",
+        "embudo_de_ventas_del_productor"
+      ],
+      "min_score": 7
+    },
+    {
+      "step": "copy_generation",
+      "description": "Generar materiales de conversion usando frameworks AIDA y PAS",
+      "frameworks": ["AIDA", "PAS"],
+      "formats": [
+        {"type": "headline", "count": 10},
+        {"type": "instagram_post", "count": 5},
+        {"type": "whatsapp_sequence", "count": 3},
+        {"type": "email_sequence", "count": 3}
+      ],
+      "design_prompt": "Canva: Fondo oscuro, contraste neon, tipografia bold. Texto: [Promesa del producto]",
+      "output": "campaign_materials/"
+    },
+    {
+      "step": "lead_distribution",
+      "description": "Distribuir copies a traves de canales de conversion",
+      "channels": [
+        {
+          "name": "whatsapp",
+          "priority": 1,
+          "protocol": "mensaje_directo"
+        },
+        {
+          "name": "telegram",
+          "priority": 2,
+          "protocol": "mensaje_directo"
+        },
+        {
+          "name": "email",
+          "priority": 3,
+          "protocol": "secuencia_automatizada"
+        }
+      ],
+      "closer_rules": {
+        "max_sentences": 3,
+        "focus": "escasez_y_curiosidad",
+        "include_cta": true,
+        "personalization": "nombre_del_lead"
+      }
+    },
+    {
+      "step": "retargeting",
+      "description": "Secuencia de seguimiento automatico",
+      "schedule": [
+        {"delay_hours": 24, "type": "value_content", "description": "Aporte de valor, educacion, testimonio"},
+        {"delay_hours": 48, "type": "hard_close", "description": "Escasez, urgencia, CTA directo"}
+      ]
+    }
+  ],
+  "conversion_optimization": {
+    "a_b_testing": true,
+    "tracking_metrics": [
+      "click_through_rate",
+      "conversion_rate",
+      "cost_per_acquisition",
+      "return_on_ad_spend"
+    ],
+    "optimization_interval_hours": 24
+  },
+  "survival_integration": {
+    "on_low_compute": "Pausar busqueda de productos nuevos. Enfocar todo en cierre de leads existentes.",
+    "on_critical": "Usar solo modelo de inferencia economico. Cierre manual forzado. Sin experimentos.",
+    "on_normal": "Operacion completa: caza, copia, cierre, optimizacion."
+  }
+}

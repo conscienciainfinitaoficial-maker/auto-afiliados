@@ -10,7 +10,11 @@
 import type { HttpClientConfig } from "../types.js";
 import { DEFAULT_HTTP_CLIENT_CONFIG } from "../types.js";
 
-const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+function isPrivateHost(host: string): boolean {
+  return host === "localhost" || host === "127.0.0.1" || host === "::1" ||
+    host === "0.0.0.0" || host.startsWith("10.") ||
+    host.startsWith("172.") || host.startsWith("192.168.");
+}
 
 function assertSecureUrl(
   url: string,
@@ -29,13 +33,13 @@ function assertSecureUrl(
   }
 
   const host = parsed.hostname.toLowerCase();
-  if (protocol === "http:" && allowHttpOnLoopback && LOOPBACK_HOSTS.has(host)) {
+  if (protocol === "http:" && allowHttpOnLoopback && isPrivateHost(host)) {
     return;
   }
 
   throw new Error(
     `HTTPS required: refusing insecure URL ${url}. ` +
-      "For local development, only loopback HTTP (localhost/127.0.0.1/::1) can be explicitly enabled.",
+      "For local development, only loopback/private HTTP can be explicitly enabled.",
   );
 }
 
