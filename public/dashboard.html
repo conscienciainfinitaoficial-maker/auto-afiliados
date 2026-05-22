@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoAfiliados - Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg: #08080f;
+      --surface: #0f0f1a;
+      --card: #151525;
+      --border: #1e1e35;
+      --primary: #00f5d4;
+      --accent: #7b2ff7;
+      --danger: #ff6b6b;
+      --warning: #ffd93d;
+      --success: #00f5d4;
+      --text: #e0e0f0;
+      --muted: #6b6b8d;
+      --radius: 12px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+    }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom:1px solid var(--border); margin-bottom:16px; }
+    .sidebar-logo h1 { font-size:1.2rem; font-weight:800; }
+    .sidebar-logo h1 span:first-child { color: var(--primary); }
+    .sidebar-logo h1 span:last-child { color: var(--accent); }
+    .sidebar-logo .plan { font-size:0.7rem; color:var(--muted); margin-top:4px; }
+    .nav-item {
+      display: flex; align-items: center; gap:12px; padding:10px 20px;
+      color: var(--muted); text-decoration:none; font-size:0.85rem;
+      transition: all 0.2s; cursor:pointer; border-left: 3px solid transparent;
+    }
+    .nav-item:hover { color:var(--text); background:rgba(255,255,255,0.03); }
+    .nav-item.active { color:var(--primary); border-left-color:var(--primary); background:rgba(0,245,212,0.05); }
+    .nav-item .icon { font-size:1.1rem; }
+
+    .main { flex:1; padding: 24px 32px; max-width: 1300px; }
+    .topbar {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:28px; flex-wrap:wrap; gap:12px;
+    }
+    .topbar h2 { font-size:1.4rem; font-weight:600; }
+    .topbar .status {
+      display:flex; align-items:center; gap:6px;
+      font-size:0.8rem; color:var(--muted);
+    }
+    .topbar .status-dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--success); display:inline-block;
+    }
+    .topbar .last-update { font-size:0.75rem; color:var(--muted); }
+
+    .grid { display:grid; gap:16px; }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width:1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width:700px) { .grid-4,.grid-2,.grid-3 { grid-template-columns:1fr; } .sidebar { display:none; } .main { padding:16px; } }
+
+    .stat-card {
+      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+      padding:20px; transition: transform 0.2s, border-color 0.2s;
+    }
+    .stat-card:hover { transform:translateY(-2px); border-color:var(--primary); }
+    .stat-card .label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+    .stat-card .value { font-size:1.6rem; font-weight:700; margin-top:6px; }
+    .stat-card .change { font-size:0.75rem; margin-top:4px; }
+    .stat-card .change.up { color:var(--success); }
+    .stat-card .change.down { color:var(--danger); }
+    .stat-card.accent { border-left: 3px solid var(--accent); }
+
+    .section { margin-top:28px; }
+    .section-header {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:16px; flex-wrap:wrap; gap:8px;
+    }
+    .section-header h3 { font-size:1rem; font-weight:600; }
+    .section-header .badge {
+      background:rgba(123,47,247,0.15); color:var(--accent);
+      padding:3px 10px; border-radius:50px; font-size:0.7rem;
+    }
+    .section-header .btn-sm {
+      background:transparent; border:1px solid var(--border);
+      color:var(--muted); padding:6px 14px; border-radius:8px;
+      font-size:0.75rem; cursor:pointer; text-decoration:none;
+    }
+    .section-header .btn-sm:hover { border-color:var(--primary); color:var(--primary); }
+
+    table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+    th { text-align:left; padding:10px 12px; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
+    td { padding:10px 12px; border-bottom:1px solid rgba(30,30,53,0.5); }
+    tr:hover td { background:rgba(255,255,255,0.02); }
+    .tag {
+      display:inline-block; padding:2px 8px; border-radius:50px;
+      font-size:0.7rem; background:rgba(123,47,247,0.15); color:var(--accent);
+    }
+    .tag.green { background:rgba(0,245,212,0.1); color:var(--success); }
+    .tag.orange { background:rgba(255,217,61,0.1); color:var(--warning); }
+
+    .card {
+      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+      padding:20px; overflow:hidden;
+    }
+    .card.chart-card { padding:16px; }
+    .card canvas { max-height:200px; }
+
+    .copy-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:10px;
+      padding:16px; font-size:0.82rem; line-height:1.5;
+    }
+    .copy-card .meta { display:flex; gap:10px; margin-top:10px; font-size:0.7rem; color:var(--muted); }
+    .copy-card .framework {
+      display:inline-block; padding:1px 8px; border-radius:4px;
+      background:rgba(123,47,247,0.1); color:var(--accent); font-size:0.7rem;
+    }
+
+    .empty-state {
+      text-align:center; padding:40px 20px; color:var(--muted);
+    }
+    .empty-state .icon { font-size:2.5rem; margin-bottom:12px; }
+    .empty-state h4 { color:var(--text); margin-bottom:6px; }
+
+    .activity-feed { max-height:300px; overflow-y:auto; }
+    .activity-item {
+      display:flex; gap:12px; padding:10px 0; border-bottom:1px solid rgba(30,30,53,0.3);
+      font-size:0.8rem;
+    }
+    .activity-item .dot {
+      width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0;
+    }
+    .activity-item .dot.green { background:var(--success); }
+    .activity-item .dot.purple { background:var(--accent); }
+    .activity-item .time { color:var(--muted); font-size:0.7rem; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <h1><span>AUTO</span><span>AFILIADOS</span></h1>
+    <div class="plan">Dashboard v1.0</div>
+  </div>
+  <div class="nav-item active"><span class="icon">📊</span> Overview</div>
+  <div class="nav-item"><span class="icon">👤</span> Leads</div>
+  <div class="nav-item"><span class="icon">📝</span> Copies</div>
+  <div class="nav-item"><span class="icon">📢</span> Anuncios</div>
+  <div class="nav-item"><span class="icon">💰</span> Ingresos</div>
+  <div class="nav-item"><span class="icon">⚙️</span> Configuración</div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h2>📊 Dashboard</h2>
+      <div class="last-update" id="lastUpdate">Actualizando...</div>
+    </div>
+    <div class="status">
+      <span class="status-dot"></span>
+      Sistema operativo
+      <span style="margin-left:16px;">📱 WhatsApp <span id="waStatus">conectado</span></span>
+    </div>
+  </div>
+
+  <div class="grid grid-4" id="statCards">
+    <div class="stat-card accent">
+      <div class="label">Leads Totales</div>
+      <div class="value" id="totalLeads">0</div>
+      <div class="change up">+0 hoy</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Tasa Conversión</div>
+      <div class="value">2.4%</div>
+      <div class="change up">+0.3% vs ayer</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Ingresos</div>
+      <div class="value">$0</div>
+      <div class="change">Pendiente</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Gasto Ads</div>
+      <div class="value">$0</div>
+      <div class="change">Sin campañas</div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="section">
+      <div class="section-header">
+        <h3>📋 Últimos Leads</h3>
+        <span class="badge" id="leadCount">0 registros</span>
+      </div>
+      <div class="card" style="padding:0; overflow:auto;">
+        <table id="leadTable">
+          <thead><tr><th>Nombre</th><th>Email</th><th>WhatsApp</th><th>Producto</th><th>Hora</th></tr></thead>
+          <tbody id="leadBody">
+            <tr><td colspan="5"><div class="empty-state"><h4>Sin leads aún</h4><p>Compartí la landing page para recibir tus primeros leads</p></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><h3>⚡ Actividad Reciente</h3></div>
+      <div class="card activity-feed" id="activityFeed">
+        <div class="empty-state"><h4>Sin actividad</h4><p>La actividad aparecerá aquí automáticamente</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="section">
+      <div class="section-header"><h3>📈 Leads por Día</h3></div>
+      <div class="card chart-card"><canvas id="leadsChart"></canvas></div>
+    </div>
+    <div class="section">
+      <div class="section-header"><h3>💡 Últimos Copies Generados</h3></div>
+      <div style="display:grid; gap:10px;">
+        <div class="copy-card">
+          <div><span class="framework">AIDA</span> ¿Cansada de la hinchazón? Descubrí 50 recetas sin azúcar que transforman tu cuerpo en 7 días.</div>
+          <div class="meta"><span>📱 WhatsApp</span><span>✅ Activo</span><span>🔥 3 envios</span></div>
+        </div>
+        <div class="copy-card">
+          <div><span class="framework">PAS</span> ¿Te suena familiar? Comés "sano" pero los antojos no te dejan en paz. El problema no sos vos, es el azúcar oculta.</div>
+          <div class="meta"><span>📧 Email</span><span>⏳ Borrador</span></div>
+        </div>
+        <div class="copy-card">
+          <div><span class="framework">AIDA</span> 50 recetas. 0 azúcar. Resultados desde la semana 1. El sistema que estabas esperando.</div>
+          <div class="meta"><span>📱 WhatsApp</span><span>✅ Activo</span><span>🔥 7 envios</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h3>📢 Rendimiento de Anuncios</h3><a href="#" class="btn-sm">+ Nuevo</a></div>
+    <div class="card" style="padding:0; overflow:auto;">
+      <table>
+        <thead><tr><th>Campaña</th><th>Inversión</th><th>Impresiones</th><th>Clics</th><th>CTR</th><th>Leads</th><th>CPA</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Sabor Sin Culpa - Prospecting</td><td>$0.00</td><td>0</td><td>0</td><td>0%</td><td>0</td><td>$0</td><td><span class="tag orange">Borrador</span></td></tr>
+          <tr><td>Sabor Sin Culpa - Retarget</td><td>$0.00</td><td>0</td><td>0</td><td>0%</td><td>0</td><td>$0</td><td><span class="tag orange">Borrador</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = window.location.origin + "/api/leads";
+
+function addActivity(icon, text, color) {
+  const feed = document.getElementById("activityFeed");
+  const empty = feed.querySelector(".empty-state");
+  if (empty) empty.remove();
+  const item = document.createElement("div");
+  item.className = "activity-item";
+  item.innerHTML = `<div class="dot ${color}"></div><div><div>${text}</div><div class="time">${new Date().toLocaleTimeString("es-AR")}</div></div>`;
+  feed.prepend(item);
+  if (feed.children.length > 20) feed.lastChild.remove();
+}
+
+async function loadLeads() {
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
+    document.getElementById("lastUpdate").textContent = "Última actualización: " + new Date(data.lastUpdate).toLocaleTimeString("es-AR");
+
+    document.getElementById("totalLeads").textContent = data.total;
+    document.getElementById("leadCount").textContent = data.total + " registros";
+    const todayEl = document.querySelector(".stat-card .change.up");
+    if (todayEl) todayEl.textContent = `+${data.today} hoy`;
+
+    const tbody = document.getElementById("leadBody");
+    if (data.leads && data.leads.length) {
+      tbody.innerHTML = data.leads.slice().reverse().map(l => `
+        <tr>
+          <td><strong>${l.name}</strong></td>
+          <td>${l.email}</td>
+          <td>${l.whatsapp}</td>
+          <td><span class="tag">${l.product}</span></td>
+          <td>${new Date(l.timestamp).toLocaleTimeString("es-AR")}</td>
+        </tr>
+      `).join("");
+    }
+    if (data.leads && data.leads.length > 0) {
+      addActivity("💚", `Nuevo lead: ${data.leads[data.leads.length-1].name} - ${data.leads[data.leads.length-1].product}`, "green");
+    }
+  } catch (e) {
+    console.log("Waiting for leads...");
+  }
+}
+
+loadLeads();
+setInterval(loadLeads, 10000);
+
+addActivity("🚀", "Dashboard iniciado", "green");
+addActivity("📱", "WhatsApp worker conectado", "green");
+addActivity("🌐", "Landing page online", "green");
+addActivity("💻", "Sistema operativo", "purple");
+
+new Chart(document.getElementById("leadsChart"), {
+  type: "bar",
+  data: {
+    labels: ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],
+    datasets: [{
+      label: "Leads",
+      data: [0,0,0,0,0,0,0],
+      backgroundColor: "rgba(0,245,212,0.2)",
+      borderColor: "rgba(0,245,212,0.8)",
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: "rgba(255,255,255,0.03)" }, ticks: { color: "#6b6b8d" } },
+      y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.03)" }, ticks: { color: "#6b6b8d" } }
+    }
+  }
+});
+</script>
+</body>
+</html>
