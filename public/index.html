@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔥 Únete al Programa de Afiliados Top</title>
+  <title>Sabor Sin Culpa - 50 Recetas Sin Azúcar</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg-dark: #0a0a0f;
       --bg-card: #12121a;
-      --primary: #00ff88;
-      --accent: #ff00aa;
+      --primary: #ff6b35;
+      --secondary: #00c9a7;
+      --accent: #ffd700;
       --text: #e0e0e0;
       --text-muted: #888;
     }
@@ -19,9 +20,8 @@
       background: var(--bg-dark);
       color: var(--text);
       line-height: 1.6;
-      min-height: 100vh;
     }
-    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
     
     header {
       display: flex;
@@ -29,62 +29,168 @@
       align-items: center;
       padding: 20px 0;
       border-bottom: 1px solid #222;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
-    .logo span { color: var(--accent); }
+    .logo { font-size: 1.3rem; font-weight: 800; color: var(--secondary); }
+    .logo span { color: var(--primary); }
+    .header-links { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+    .header-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+    .header-links a:hover { color: var(--primary); }
+    .buy-btn-sm {
+      background: var(--primary);
+      color: #000 !important;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.85rem !important;
+    }
+    .buy-btn-sm:hover { background: #e55a2b; color: #000 !important; }
     
     .hero {
       text-align: center;
-      padding: 60px 20px;
+      padding: 60px 20px 40px;
       background: linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 100%);
     }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 107, 53, 0.2);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 107, 53, 0.3);
+    }
     .hero h1 {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       margin-bottom: 15px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .hero p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 30px; }
-    
-    .cta-btn {
+    .hero p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 30px; max-width: 650px; margin-left: auto; margin-right: auto; }
+    .hero-cta-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+    .cta-primary, .cta-secondary {
       display: inline-block;
-      padding: 15px 40px;
-      background: var(--primary);
-      color: #000;
-      font-weight: bold;
-      font-size: 1.1rem;
+      padding: 16px 35px;
+      font-weight: 700;
+      font-size: 1.05rem;
       text-decoration: none;
       border-radius: 50px;
       transition: transform 0.2s, box-shadow 0.2s;
     }
-    .cta-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+    .cta-primary {
+      background: var(--primary);
+      color: #000;
     }
+    .cta-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 107, 53, 0.4);
+    }
+    .cta-secondary {
+      background: transparent;
+      color: var(--secondary);
+      border: 2px solid var(--secondary);
+    }
+    .cta-secondary:hover { background: rgba(0, 201, 167, 0.1); }
+    .hero-trust { margin-top: 25px; display: flex; gap: 25px; justify-content: center; font-size: 0.85rem; color: var(--text-muted); flex-wrap: wrap; }
     
-    .form-section {
+    .pain-section {
+      padding: 50px 0;
+      text-align: center;
+    }
+    .pain-section h2 { color: var(--primary); margin-bottom: 30px; font-size: 1.6rem; }
+    .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .pain-card {
       background: var(--bg-card);
-      border-radius: 20px;
-      padding: 40px;
-      margin: 40px 0;
+      padding: 25px;
+      border-radius: 15px;
       border: 1px solid #222;
     }
-    .form-section h2 {
+    .pain-card h3 { margin-bottom: 10px; }
+    .pain-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+    .product-section {
+      padding: 50px 0;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    @media (max-width: 700px) { .product-grid { grid-template-columns: 1fr; } }
+    .product-info h2 { font-size: 1.8rem; margin-bottom: 15px; color: var(--secondary); }
+    .product-info p { color: var(--text-muted); margin-bottom: 15px; }
+    .product-info ul { list-style: none; margin-bottom: 20px; }
+    .product-info ul li { padding: 8px 0; border-bottom: 1px solid #1a1a2e; }
+    .product-info ul li::before { content: "✓ "; color: var(--secondary); font-weight: bold; }
+    .product-cover {
+      background: linear-gradient(135deg, #1a1a2e, #2a1a3e);
+      border-radius: 20px;
+      padding: 40px;
       text-align: center;
-      margin-bottom: 30px;
-      color: var(--primary);
+      border: 1px solid #333;
     }
+    .product-cover .price-before { color: var(--text-muted); text-decoration: line-through; font-size: 1.2rem; }
+    .product-cover .price-now { font-size: 2.5rem; color: var(--primary); font-weight: 800; margin: 10px 0; }
+    .product-cover .price-label { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; }
+    .product-cover .bonus {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+    .product-cover .bonus span { color: var(--accent); font-weight: 600; }
+
+    .benefits-section { padding: 50px 0; }
+    .benefits-section h2 { text-align: center; margin-bottom: 40px; font-size: 1.6rem; }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .benefit-card {
+      background: var(--bg-card);
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid #222;
+    }
+    .benefit-card h3 { margin-bottom: 10px; color: var(--secondary); }
+    .benefit-card p { color: var(--text-muted); font-size: 0.85rem; }
     
-    .form-group { margin-bottom: 20px; }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
+    .testimonials { padding: 50px 0; background: #0d0d12; }
+    .testimonials h2 { text-align: center; margin-bottom: 40px; }
+    .testimonial {
+      background: var(--bg-card);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      border-left: 3px solid var(--primary);
     }
-    .form-group input, .form-group select {
+    .testimonial p { font-style: italic; color: var(--text-muted); font-size: 0.9rem; }
+    .testimonial cite { display: block; margin-top: 8px; color: var(--secondary); font-size: 0.85rem; }
+    
+    .lead-section {
+      background: linear-gradient(135deg, #1a1a2e, #2a1a3e);
+      border-radius: 20px;
+      padding: 50px 40px;
+      margin: 40px 0;
+      text-align: center;
+      border: 1px solid #333;
+    }
+    .lead-section h2 { color: var(--secondary); margin-bottom: 10px; font-size: 1.5rem; }
+    .lead-section p { color: var(--text-muted); margin-bottom: 30px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 15px; }
+    .form-group input {
       width: 100%;
       padding: 15px;
       background: #0a0a0f;
@@ -92,59 +198,31 @@
       border-radius: 10px;
       color: var(--text);
       font-size: 1rem;
-      transition: border-color 0.2s;
     }
-    .form-group input:focus, .form-group select:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
+    .form-group input:focus { outline: none; border-color: var(--secondary); }
     .form-group input::placeholder { color: #555; }
-    
     .submit-btn {
       width: 100%;
-      padding: 18px;
-      background: linear-gradient(90deg, var(--primary), #00cc6a);
+      padding: 16px;
+      background: var(--primary);
       color: #000;
-      font-weight: bold;
-      font-size: 1.1rem;
+      font-weight: 700;
+      font-size: 1.05rem;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.2s;
     }
-    .submit-btn:hover { transform: scale(1.02); }
     .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    
-    .benefits { padding: 40px 0; }
-    .benefits h2 { text-align: center; margin-bottom: 40px; color: var(--primary); }
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-    }
-    .benefit-card {
-      background: var(--bg-card);
+    .loading { display: none; text-align: center; padding: 20px; color: var(--secondary); }
+    .success-message {
+      display: none;
       padding: 30px;
+      background: rgba(0, 201, 167, 0.1);
       border-radius: 15px;
-      text-align: center;
-      border: 1px solid #222;
+      border: 1px solid var(--secondary);
     }
-    .benefit-icon { font-size: 3rem; margin-bottom: 15px; }
-    .benefit-card h3 { margin-bottom: 10px; color: var(--primary); }
-    .benefit-card p { color: var(--text-muted); font-size: 0.9rem; }
-    
-    .testimonials { padding: 40px 0; background: #0d0d12; }
-    .testimonials h2 { text-align: center; margin-bottom: 40px; }
-    .testimonial {
-      background: var(--bg-card);
-      padding: 25px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      border-left: 3px solid var(--accent);
-    }
-    .testimonial p { font-style: italic; color: var(--text-muted); }
-    .testimonial cite { display: block; margin-top: 10px; color: var(--primary); }
-    
+    .success-message h3 { color: var(--secondary); margin-bottom: 10px; }
+
     footer {
       text-align: center;
       padding: 40px 20px;
@@ -152,129 +230,156 @@
       font-size: 0.8rem;
       border-top: 1px solid #222;
     }
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      color: var(--primary);
-    }
-    .success-message {
-      display: none;
-      text-align: center;
-      padding: 30px;
-      background: rgba(0, 255, 136, 0.1);
-      border-radius: 15px;
-      border: 1px solid var(--primary);
-    }
-    .success-message h3 { color: var(--primary); margin-bottom: 10px; }
-    
-    @media (max-width: 600px) {
-      .hero h1 { font-size: 1.8rem; }
-      .form-section { padding: 20px; }
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div class="logo">AUTO<span>AFILIADOS</span></div>
-      <a href="#join" style="color: var(--primary); text-decoration: none;">Únete</a>
+      <div class="logo">SABOR<span>SIN</span>CULPA</div>
+      <div class="header-links">
+        <a href="#comprar">Comprar</a>
+        <a href="#lead">¿Dudas?</a>
+        <a href="https://go.hotmart.com/B105798916S" class="buy-btn-sm">COMPRAR AHORA</a>
+      </div>
     </header>
 
     <section class="hero">
-      <h1>🚀 Gana Dinero con Productos Digitales</h1>
-      <p>Únete a nuestro programa de afiliados y ganha hasta 60% de comisión por cada venta</p>
-      <a href="#join" class="cta-btn">Comenzar Ahora →</a>
+      <div class="hero-badge">🔥 Lanzamiento Beta - Ahorrá 60%</div>
+      <h1>50 Recetas 100% Sin Azúcar<br>para Comer Rico Sin Culpa</h1>
+      <p>Recuperá tu energía, desinflamá tu cuerpo y eliminá los antojos constantes con recetas fáciles, ingredientes del súper y resultados desde la primera semana.</p>
+      <div class="hero-cta-group">
+        <a href="https://go.hotmart.com/B105798916S" class="cta-primary">💰 COMPRAR AHORA - $17 USD</a>
+        <a href="#lead" class="cta-secondary">🎯 Quiero más info</a>
+      </div>
+      <div class="hero-trust">
+        <span>✅ Acceso Inmediato</span>
+        <span>🔒 Garantía 7 Días</span>
+        <span>📱 Formato Digital</span>
+      </div>
     </section>
 
-    <section class="benefits">
-      <h2>💎 Por Qué Unite a Nosotros</h2>
+    <section class="pain-section">
+      <h2>⚠️ ¿Te Suena Familiar?</h2>
+      <div class="pain-grid">
+        <div class="pain-card">
+          <h3>😫 Hinchazón Constante</h3>
+          <p>Comés "sano" pero siempre tenés esa sensación de hinchazón que no se va.</p>
+        </div>
+        <div class="pain-card">
+          <h3>🍪 Antojos Imparables</h3>
+          <p>Llega la tarde y tu cuerpo te ruega por algo dulce. Ciclo de culpa y frustración.</p>
+        </div>
+        <div class="pain-card">
+          <h3>🔍 El Enemigo Oculto</h3>
+          <p>Productos "saludables" del supermercado tienen azúcar escondida que sabotea tus resultados.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="product-section" id="comprar">
+      <div class="product-grid">
+        <div class="product-info">
+          <h2>📖 Sabor Sin Culpa</h2>
+          <p>El sistema definitivo de 50 recetas sin azúcar para gente real. Sin ingredientes raros, sin técnicas complicadas.</p>
+          <ul>
+            <li>50 recetas probadas: desayunos, almuerzos, cenas, snacks y postres</li>
+            <li>Planificador semanal de 4 semanas</li>
+            <li>Lista de compras inteligente</li>
+            <li>Sustitutos y equivalentes del azúcar</li>
+            <li>Método "Plato SSC" anti-picos de insulina</li>
+          </ul>
+        </div>
+        <div class="product-cover">
+          <div class="price-before">USD $47</div>
+          <div class="price-now">USD $17</div>
+          <div class="price-label">🔥 Lanzamiento Beta - Cupos limitados</div>
+          <a href="https://go.hotmart.com/B105798916S" class="cta-primary" style="margin-bottom:15px; display:inline-block;">SÍ, QUIERO ACCEDER AHORA</a>
+          <div class="bonus">
+            🎁 <span>BONUS INCLUIDO:</span> Desayunos Express - 10 Recetas en 10 Min (Valor USD $15)<br>
+            <small style="color:var(--text-muted)">Llevate los 2 productos al precio de 1</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits-section">
+      <h2>✅ Resultados desde la Semana 1</h2>
       <div class="benefits-grid">
         <div class="benefit-card">
-          <div class="benefit-icon">💰</div>
-          <h3>Altas Comisiones</h3>
-          <p>Ganha hasta 60% por venta. Pagos rápidos y seguros.</p>
+          <h3>🔥 Menos Antojos</h3>
+          <p>Después del día 4-5 los antojos por azúcar desaparecen. Tu cuerpo se desintoxica naturalmente.</p>
         </div>
         <div class="benefit-card">
-          <div class="benefit-icon">📈</div>
-          <h3>Productos de Calidad</h3>
-          <p>Productos probados con alta tasa de conversión.</p>
+          <h3>⚡ Más Energía</h3>
+          <p>Sin picos de insulina. Energía estable todo el día. Adiós al bajón post-comida.</p>
         </div>
         <div class="benefit-card">
-          <div class="benefit-icon">🎯</div>
-          <h3>Soporte Personal</h3>
-          <p>Te damos herramientas, trainings y soporte 24/7.</p>
+          <h3>👗 Desinflamación</h3>
+          <p>Notá la diferencia en tu ropa en solo una semana. Menos hinchazón abdominal.</p>
+        </div>
+        <div class="benefit-card">
+          <h3>👨‍👩‍👧‍👧 Para Toda la Familia</h3>
+          <p>Recetas tan ricas que nadie va a notar que son "de dieta". Hasta los chicos las piden.</p>
         </div>
       </div>
     </section>
 
     <section class="testimonials">
-      <h2>⭐ Lo que dicen nuestros afiliados</h2>
+      <h2>⭐ Resultados Reales</h2>
       <div class="testimonial">
-        <p>"En 2 meses ya estava ganando $1.500/mes. El producto es increíble y la conversión es muy alta."</p>
-        <cite>- Carlos M., Argentina</cite>
+        <p>"No puedo creer que este postre no tenga azúcar. Me hice el mousse de palta y cacao y parecía de restaurante."</p>
+        <cite>- Mariana G., Buenos Aires</cite>
       </div>
       <div class="testimonial">
-        <p>"El mejor programa de afiliados que já participei. Soporte rápido y pagos siempre en fecha."</p>
-        <cite>- Mariana S., Brasil</cite>
+        <p>"Bajé la inflamación en una semana y ya no tengo esos bajones de energía a la tarde. Mi ropa me queda más suelta."</p>
+        <cite>- Juan Pablo R., Córdoba</cite>
       </div>
       <div class="testimonial">
-        <p>"Empeze sin experiencia y en 3 meses ya tengo un flujo pasivo de ingresos. Recomendado!"</p>
-        <cite>- Jorge L., México</cite>
+        <p>"Mi familia ni se dio cuenta y ahora todos comemos mejor. Hasta los chicos piden las recetas."</p>
+        <cite>- Laura S., Montevideo</cite>
       </div>
     </section>
 
-    <section id="join" class="form-section">
-      <h2>📝 Únete Ahora - Es Gratis</h2>
-      <form id="leadForm">
-        <div class="form-group">
-          <label for="name">Nombre completo</label>
-          <input type="text" id="name" name="name" placeholder="Juan Pérez" required>
+    <section class="lead-section" id="lead">
+      <h2>🎯 ¿Tenés Dudas? Te Ayudamos</h2>
+      <p>Dejanos tus datos y te contactamos por WhatsApp para contarte más sobre el programa.</p>
+      <form id="leadForm" style="max-width:500px; margin:0 auto;">
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="name" placeholder="Tu nombre" required>
+          </div>
+          <div class="form-group">
+            <input type="email" id="email" placeholder="Tu email" required>
+          </div>
         </div>
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="juan@email.com" required>
+          <input type="tel" id="whatsapp" placeholder="WhatsApp (+54 11 1234 5678)" required>
         </div>
-        <div class="form-group">
-          <label for="whatsapp">WhatsApp (con código de país)</label>
-          <input type="tel" id="whatsapp" name="whatsapp" placeholder="+54 11 1234 5678" required>
-        </div>
-        <div class="form-group">
-          <label for="niche">¿En qué nicho quieres trabajar?</label>
-          <select id="niche" name="niche" required>
-            <option value="">Selecciona una opción</option>
-            <option value="marketing">Marketing Digital</option>
-            <option value="finanzas">Finanzas e Inversiones</option>
-            <option value="salud">Salud y Bienestar</option>
-            <option value="educacion">Educación y Cursos</option>
-            <option value="tecnologia">Tecnología y Software</option>
-            <option value="otro">Otro</option>
-          </select>
-        </div>
-        <button type="submit" class="submit-btn" id="submitBtn">¡Registrarme Ahora!</button>
+        <button type="submit" class="submit-btn" id="submitBtn">📲 Quiero que me contacten</button>
       </form>
-      <div class="loading" id="loading">Enviando tus datos...</div>
+      <div class="loading" id="loading">Enviando...</div>
       <div class="success-message" id="success">
-        <h3>🎉 ¡Registro Exitoso!</h3>
-        <p>Nos pondremos en contacto contigo muy pronto por WhatsApp.</p>
+        <h3>✅ ¡Listo!</h3>
+        <p>Te vamos a contactar por WhatsApp en las próximas horas.</p>
+        <p style="margin-top:15px;">Mientras tanto, <a href="https://go.hotmart.com/B105798916S" style="color:var(--primary); font-weight:600;">comprá ahora con 60% de descuento →</a></p>
       </div>
     </section>
 
     <footer>
-      <p>© 2026 AutoAfiliados. Todos los derechos reservados.</p>
-      <p style="margin-top: 10px;">
-        <a href="#" style="color: var(--text-muted);">Términos</a> | 
-        <a href="#" style="color: var(--text-muted);">Privacidad</a>
+      <p>© 2026 Sabor Sin Culpa - Todos los derechos reservados.</p>
+      <p style="margin-top:10px;">
+        <a href="https://go.hotmart.com/B105798916S" style="color:var(--primary);">Comprar Ahora</a> | 
+        <a href="https://pay.hotmart.com/B105798916S" style="color:var(--text-muted);">Soporte</a>
       </p>
     </footer>
   </div>
 
   <script>
     const API_URL = window.location.origin + "/api/leads";
+    const PRODUCT = "Sabor Sin Culpa + Desayunos Express";
 
     document.getElementById("leadForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      
       const btn = document.getElementById("submitBtn");
       const loading = document.getElementById("loading");
       const success = document.getElementById("success");
@@ -284,18 +389,17 @@
       loading.style.display = "block";
       form.style.display = "none";
 
-      const lead = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        whatsapp: document.getElementById("whatsapp").value,
-        niche: document.getElementById("niche").value,
-      };
-
       try {
         const res = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(lead),
+          body: JSON.stringify({
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            whatsapp: document.getElementById("whatsapp").value,
+            niche: "salud",
+            product: PRODUCT,
+          }),
         });
 
         if (res.ok) {
@@ -308,7 +412,7 @@
           form.style.display = "block";
         }
       } catch (err) {
-        alert("Error de conexión. Asegúrate de que el servidor esté corriendo.");
+        alert("Error de conexión.");
         btn.disabled = false;
         loading.style.display = "none";
         form.style.display = "block";
