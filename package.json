@@ -35,7 +35,6 @@
     "auto-afiliados"
   ],
   "license": "MIT",
-  "packageManager": "pnpm@10.28.1",
   "scripts": {
     "build": "tsc && pnpm -r build",
     "dev": "tsx watch src/index.ts",
@@ -74,10 +73,4 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "esbuild"
-    ]
-  }
 }
