@@ -1,9 +1,6 @@
-import { createHash, randomUUID } from "crypto";
-
 const config = {
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
   telegramChatId: process.env.TELEGRAM_CHAT_ID,
-  telegramRestrictedTo: (process.env.ADMIN_EMAILS || "").split(",").filter(Boolean),
   twilio: {
     accountSid: process.env.TWILIO_ACCOUNT_SID || process.env.TWILIO_API_KEY,
     authToken: process.env.TWILIO_AUTH_TOKEN || process.env.TWILIO_API_SECRET,
