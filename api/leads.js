@@ -2,7 +2,8 @@ const config = {
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
   telegramChatId: process.env.TELEGRAM_CHAT_ID,
   twilio: {
-    accountSid: process.env.TWILIO_ACCOUNT_SID || process.env.TWILIO_API_KEY,
+    accountSid: process.env.TWILIO_ACCOUNT_SID,
+    apiKeySid: process.env.TWILIO_API_KEY_SID,
     authToken: process.env.TWILIO_AUTH_TOKEN || process.env.TWILIO_API_SECRET,
     fromNumber: process.env.TWILIO_FROM_NUMBER || "whatsapp:+14155238886",
     toNumber: process.env.TWILIO_TO_NUMBER,
@@ -16,7 +17,8 @@ function missing(key) {
 function validateConfig() {
   missing("TELEGRAM_BOT_TOKEN");
   missing("TELEGRAM_CHAT_ID");
-  if (config.twilio.accountSid && config.twilio.authToken) {
+  if (config.twilio.apiKeySid && config.twilio.authToken) {
+    missing("TWILIO_ACCOUNT_SID");
     missing("TWILIO_TO_NUMBER");
   }
 }
@@ -32,10 +34,10 @@ async function sendTelegram(message) {
 }
 
 async function sendWhatsApp(body) {
-  if (!config.twilio.accountSid) return false;
-  const { accountSid, authToken, fromNumber, toNumber } = config.twilio;
+  if (!config.twilio.apiKeySid) return false;
+  const { accountSid, apiKeySid, authToken, fromNumber, toNumber } = config.twilio;
   const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
-  const credentials = Buffer.from(`${accountSid}:${authToken}`).toString("base64");
+  const credentials = Buffer.from(`${apiKeySid}:${authToken}`).toString("base64");
   try {
     const response = await fetch(url, {
       method: "POST",
