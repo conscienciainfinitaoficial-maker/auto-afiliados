@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
+const { URL } = require("url");
+
 const PORT = process.env.PORT || 3000;
 
 const missing = (key) => { throw new Error(`Missing env var: ${key}`); };
@@ -15,13 +20,16 @@ const config = {
   },
 };
 
+const LANDING_PATH = path.join(__dirname, "landing.html");
+
 async function sendTelegram(message) {
   const url = `https://api.telegram.org/bot${config.telegramBotToken}/sendMessage`;
-  await fetch(url, {
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: config.telegramChatId, text: message, parse_mode: "HTML" }),
   });
+  if (!res.ok) console.error("Telegram error:", await res.text());
 }
 
 async function sendWhatsApp(body) {
@@ -50,17 +58,40 @@ async function handleRequest(req, res) {
 
     try {
       const lead = JSON.parse(body);
-      const message = `NUEVO LEAD\nNombre: ${lead.name}\nEmail: ${lead.email}\nWhatsApp: ${lead.whatsapp}\nNicho: ${lead.niche || "general"}`;
-      await sendTelegram(message);
+      const msg = `NUEVO LEAD\nNombre: ${lead.name}\nEmail: ${lead.email}\nWhatsApp: ${lead.whatsapp}\nNicho: ${lead.niche || "general"}`;
+      await sendTelegram(msg);
       await sendWhatsApp(`Nuevo lead: ${lead.name} - ${lead.whatsapp}`);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true }));
-    } catch (e) { res.writeHead(400); res.end(JSON.stringify({ error: "Invalid" })); }
+    } catch (e) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Invalid request" }));
+    }
     return;
   }
 
-  if (req.method === "GET" && url.pathname === "/health") { res.writeHead(200); res.end(JSON.stringify({ status: "ok" })); return; }
-  res.writeHead(404); res.end("Not found");
+  if (req.method === "GET" && url.pathname === "/health") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ status: "ok" }));
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname === "/") {
+    try {
+      const html = fs.readFileSync(LANDING_PATH, "utf-8");
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(html);
+    } catch (e) {
+      res.writeHead(500);
+      res.end("Landing page not found");
+    }
+    return;
+  }
+
+  res.writeHead(404);
+  res.end("Not found");
 }
 
-require("http").createServer(handleRequest).listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+http.createServer(handleRequest).listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
