@@ -133,7 +133,8 @@ function loadRecentOutcomes(db: Database): Array<{
       content: string;
       createdAt: string;
     }>;
-  } catch {
+  } catch (err) {
+    console.warn("Failed to load recent outcomes:", err instanceof Error ? err.message : String(err));
     return [];
   }
 }
@@ -157,7 +158,8 @@ function readCachedBalance(db: Database): { creditsCents?: number; usdcBalance?:
         ? parsed.usdcBalance
         : undefined,
     };
-  } catch {
+  } catch (err) {
+    console.warn("Failed to read cached balance:", err instanceof Error ? err.message : String(err));
     return null;
   }
 }
@@ -176,8 +178,8 @@ async function resolveCreditsCents(
       if (Number.isFinite(balance)) {
         return Math.max(0, Math.floor(balance));
       }
-    } catch {
-      // Fall back to cached or default balances.
+    } catch (err) {
+      console.warn("Failed to resolve credits balance from funding:", err instanceof Error ? err.message : String(err));
     }
   }
 
@@ -216,7 +218,8 @@ function listWorkspaceFiles(workspace?: Pick<AgentWorkspace, "basePath" | "listO
     return workspace.listOutputs()
       .map((file) => path.relative(workspace.basePath, file.path).split(path.sep).join("/"))
       .filter((filePath) => filePath.length > 0);
-  } catch {
+  } catch (err) {
+    console.warn("Failed to list workspace files:", err instanceof Error ? err.message : String(err));
     return [];
   }
 }

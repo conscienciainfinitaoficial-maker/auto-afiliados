@@ -129,7 +129,9 @@ function loadConstitution(): string {
       if (fs.existsSync(loc)) {
         return fs.readFileSync(loc, "utf-8");
       }
-    } catch {}
+    } catch (err) {
+      logger.warn("Failed to load constitution file", { error: err instanceof Error ? err.message : String(err) });
+    }
   }
   return CONSTITUTION_FALLBACK;
 }

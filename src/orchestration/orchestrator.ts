@@ -483,7 +483,7 @@ export class Orchestrator {
     }
 
     try {
-      const result = await reviewPlan(planData as any, {
+      const result = await reviewPlan(planData as unknown as PlannerOutput, {
         mode: "auto",
         autoBudgetThreshold: 5000,
         consensusCriticRole: "reviewer",
@@ -534,7 +534,8 @@ export class Orchestrator {
       const assignedTasks = getTasksByGoal(this.params.db, goal.id)
         .filter((t) => t.status === "assigned" && t.assignedTo);
       for (const task of assignedTasks) {
-        const alive = this.params.isWorkerAlive(task.assignedTo!);
+        if (!task.assignedTo) continue;
+        const alive = this.params.isWorkerAlive(task.assignedTo);
         if (!alive) {
           logger.warn("Recovering stale task from dead worker", {
             taskId: task.id,
@@ -836,7 +837,8 @@ export class Orchestrator {
         estimatedSteps,
         requiresPlanMode: estimatedSteps > 3,
       };
-    } catch {
+    } catch (err) {
+      logger.warn("Complexity classification failed, using heuristic", { error: err instanceof Error ? err.message : String(err) });
       const estimatedSteps = heuristicStepEstimate(goal);
       return {
         estimatedSteps,
@@ -1163,7 +1165,8 @@ function safeJsonParse(raw: string): Record<string, unknown> | null {
       return null;
     }
     return parsed as Record<string, unknown>;
-  } catch {
+  } catch (err) {
+      logger.warn("Failed to parse JSON", { error: err instanceof Error ? err.message : String(err) });
     return null;
   }
 }

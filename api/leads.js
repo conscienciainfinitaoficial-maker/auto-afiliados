@@ -1,13 +1,13 @@
-let leads = [];
+const config = {};
 
-const config = {
-  telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
-  telegramChatId: process.env.TELEGRAM_CHAT_ID,
-  waWorkerUrl: process.env.WA_WORKER_URL,
-  waSecret: process.env.WA_SECRET || "auto-afiliados-2026",
-  supabaseUrl: process.env.SUPABASE_URL,
-  supabaseKey: process.env.SUPABASE_SERVICE_KEY,
-};
+function loadConfig() {
+  config.telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
+  config.telegramChatId = process.env.TELEGRAM_CHAT_ID;
+  config.waWorkerUrl = process.env.WA_WORKER_URL;
+  config.waSecret = process.env.WA_SECRET;
+  config.supabaseUrl = process.env.SUPABASE_URL;
+  config.supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+}
 
 function missing(key) {
   if (!process.env[key]) throw new Error(`Missing env var: ${key}`);
@@ -70,14 +70,34 @@ async function sendWhatsApp(body, phone) {
   } catch (err) { return `worker exception: ${err.message}`; }
 }
 
+function getRequestOrigin(req) {
+  const origin = req.headers.origin || req.headers.host || "";
+  if (origin.includes("localhost") || origin.includes("127.0.0.1") || origin.includes("vercel.app")) {
+    return origin.startsWith("http") ? origin : `https://${origin}`;
+  }
+  return origin || "*";
+}
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  loadConfig();
+
+  const allowedOrigin = getRequestOrigin(req);
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
 
   if (req.method === "GET") {
-    const stored = config.supabaseUrl ? await loadLeads() : leads;
+    if (!config.supabaseUrl) {
+      return res.status(200).json({
+        leads: [],
+        total: 0,
+        today: 0,
+        lastUpdate: new Date().toISOString(),
+        storage: "unavailable",
+      });
+    }
+    const stored = await loadLeads();
     const today = stored.filter(l =>
       new Date(l.timestamp).toDateString() === new Date().toDateString()
     );
@@ -86,7 +106,7 @@ export default async function handler(req, res) {
       total: stored.length,
       today: today.length,
       lastUpdate: new Date().toISOString(),
-      storage: config.supabaseUrl ? "database" : "memory",
+      storage: "database",
     });
   }
 
@@ -106,7 +126,6 @@ export default async function handler(req, res) {
       source: "landing",
     };
 
-    leads.push(lead);
     await saveLead(lead);
 
     const msg = `NUEVO LEAD\nProducto: ${lead.product}\nNombre: ${name}\nEmail: ${email}\nWhatsApp: ${whatsapp}\nNicho: ${lead.niche}`;

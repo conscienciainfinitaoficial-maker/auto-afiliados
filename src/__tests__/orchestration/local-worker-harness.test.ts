@@ -293,7 +293,11 @@ describe("orchestration/LocalWorkerPool harness integration", () => {
     });
 
     const originalHome = process.env.HOME;
+    const originalUserProfile = process.env.USERPROFILE;
     process.env.HOME = tempHome;
+    if (process.platform === "win32") {
+      process.env.USERPROFILE = tempHome;
+    }
     try {
       const pool = new LocalWorkerPool({
         db,
@@ -308,6 +312,13 @@ describe("orchestration/LocalWorkerPool harness integration", () => {
       await (pool as any).runWorker("worker-test", task, new AbortController().signal);
     } finally {
       process.env.HOME = originalHome;
+      if (process.platform === "win32") {
+        if (originalUserProfile) {
+          process.env.USERPROFILE = originalUserProfile;
+        } else {
+          delete process.env.USERPROFILE;
+        }
+      }
     }
 
     const row = getTaskById(db, task.id);

@@ -35,13 +35,12 @@ const SANDBOX_HOME = "/root";
  * Returns the resolved absolute path, or an error string if out of bounds.
  */
 function confinePathToSandbox(filePath: string): string | { error: string } {
-  // Resolve ~ to SANDBOX_HOME
+  // Sandbox is always Linux, use posix for cross-platform path resolution
+  const posixPath = nodePath.posix;
   const expanded = filePath.startsWith("~")
-    ? nodePath.join(SANDBOX_HOME, filePath.slice(1))
+    ? posixPath.join(SANDBOX_HOME, filePath.slice(1))
     : filePath;
-  // Resolve to absolute (relative paths resolve against SANDBOX_HOME)
-  const resolved = nodePath.resolve(SANDBOX_HOME, expanded);
-  // Ensure the resolved path is within the sandbox home
+  const resolved = posixPath.resolve(SANDBOX_HOME, expanded);
   if (resolved !== SANDBOX_HOME && !resolved.startsWith(SANDBOX_HOME + "/")) {
     return {
       error: `Blocked: write_file path "${filePath}" resolves to "${resolved}" which is outside the allowed directory (${SANDBOX_HOME}). Writes are confined to the sandbox home.`,
@@ -323,7 +322,6 @@ export function createBuiltinTools(sandboxId: string): AutomatonTool[] {
         }
 
         // Record transaction
-        const { ulid } = await import("ulid");
         ctx.db.insertTransaction({
           id: ulid(),
           type: "credit_purchase",
@@ -570,7 +568,6 @@ export function createBuiltinTools(sandboxId: string): AutomatonTool[] {
         }
         const result = await ctx.conway.exec(`npm install -g ${pkg}`, 60000);
 
-        const { ulid } = await import("ulid");
         ctx.db.insertModification({
           id: ulid(),
           timestamp: new Date().toISOString(),
@@ -721,7 +718,6 @@ export function createBuiltinTools(sandboxId: string): AutomatonTool[] {
           enabled: args.enabled !== false,
         });
 
-        const { ulid } = await import("ulid");
         ctx.db.insertModification({
           id: ulid(),
           timestamp: new Date().toISOString(),
@@ -899,7 +895,6 @@ Model: ${ctx.inference.getDefaultModel()}
         required: ["new_prompt", "reason"],
       },
       execute: async (args, ctx) => {
-        const { ulid } = await import("ulid");
         const newPrompt = args.new_prompt as string;
 
         // Sanitize genesis prompt content
@@ -970,7 +965,6 @@ Model: ${ctx.inference.getDefaultModel()}
           return `Failed to install MCP server: ${result.stderr}`;
         }
 
-        const { ulid } = await import("ulid");
         const toolEntry = {
           id: ulid(),
           name: args.name as string,
@@ -1027,7 +1021,6 @@ Model: ${ctx.inference.getDefaultModel()}
           args.reason as string | undefined,
         );
 
-        const { ulid } = await import("ulid");
         ctx.db.insertTransaction({
           id: ulid(),
           type: "transfer_out",
@@ -1765,7 +1758,6 @@ Model: ${ctx.inference.getDefaultModel()}
           `fund child ${child.id}`,
         );
 
-        const { ulid } = await import("ulid");
         ctx.db.insertTransaction({
           id: ulid(),
           type: "transfer_out",
@@ -3410,7 +3402,4 @@ export async function executeTool(
   }
 }
 
-/** Escape a string for safe shell interpolation. */
-function escapeShellArg(arg: string): string {
-  return `'${arg.replace(/'/g, "'\\''")}'`;
-}
+import { escapeShellArg } from "../git/tools.js";

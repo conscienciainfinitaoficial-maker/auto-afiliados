@@ -84,7 +84,9 @@ Environment:
         const genesis = JSON.parse(fs.readFileSync(genesisPath, "utf-8"));
         initChainType = genesis.chainType;
       }
-    } catch {}
+    } catch (err) {
+      logger.warn("Failed to read genesis.json", { error: err instanceof Error ? err.message : String(err) });
+    }
     const { chainIdentity, isNew } = await getWallet(initChainType);
     logger.info(
       JSON.stringify({

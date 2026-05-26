@@ -106,7 +106,8 @@ export class SimpleFundingProtocol implements FundingProtocol {
       }
 
       return { success };
-    } catch {
+    } catch (err) {
+      console.warn("Failed to fund child:", err instanceof Error ? err.message : String(err));
       return { success: false };
     }
   }
@@ -135,7 +136,8 @@ export class SimpleFundingProtocol implements FundingProtocol {
       }
 
       return { success, amountCents: recalled };
-    } catch {
+    } catch (err) {
+      console.warn("Failed to recall credits:", err instanceof Error ? err.message : String(err));
       return { success: false, amountCents: 0 };
     }
   }

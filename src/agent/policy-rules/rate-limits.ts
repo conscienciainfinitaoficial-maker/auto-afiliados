@@ -50,11 +50,8 @@ function createGenesisPromptDailyRule(): PolicyRule {
     priority: 600,
     appliesTo: { by: "name", names: ["update_genesis_prompt"] },
     evaluate(request: PolicyRequest): PolicyRuleResult | null {
-      // Access the raw database through the tool context
-      // The db is available via context.db, but we need the raw sqlite instance
-      // Rate limit rules need the raw DB to query policy_decisions
       const db = (request.context.db as any)?.raw ?? (request.context as any).rawDb;
-      if (!db) return deny(this.id, "DB_UNAVAILABLE", "Rate limit check failed: database not accessible");
+      if (!db) return deny("rate.genesis_prompt_daily", "DB_UNAVAILABLE", "Rate limit check failed: database not accessible");
 
       const oneDayMs = 24 * 60 * 60 * 1000;
       const recentCount = countRecentDecisions(db, "update_genesis_prompt", oneDayMs);
@@ -83,7 +80,7 @@ function createSelfModHourlyRule(): PolicyRule {
     appliesTo: { by: "name", names: ["edit_own_file"] },
     evaluate(request: PolicyRequest): PolicyRuleResult | null {
       const db = (request.context.db as any)?.raw ?? (request.context as any).rawDb;
-      if (!db) return deny(this.id, "DB_UNAVAILABLE", "Rate limit check failed: database not accessible");
+      if (!db) return deny("rate.self_mod_hourly", "DB_UNAVAILABLE", "Rate limit check failed: database not accessible");
 
       const oneHourMs = 60 * 60 * 1000;
       const recentCount = countRecentDecisions(db, "edit_own_file", oneHourMs);
@@ -112,7 +109,7 @@ function createSpawnDailyRule(): PolicyRule {
     appliesTo: { by: "name", names: ["spawn_child"] },
     evaluate(request: PolicyRequest): PolicyRuleResult | null {
       const db = (request.context.db as any)?.raw ?? (request.context as any).rawDb;
-      if (!db) return deny(this.id, "DB_UNAVAILABLE", "Rate limit check failed: database not accessible");
+      if (!db) return deny("rate.spawn_daily", "DB_UNAVAILABLE", "Rate limit check failed: database not accessible");
 
       const oneDayMs = 24 * 60 * 60 * 1000;
       const recentCount = countRecentDecisions(db, "spawn_child", oneDayMs);

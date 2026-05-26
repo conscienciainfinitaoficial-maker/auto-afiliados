@@ -20,7 +20,7 @@ const config = {
   },
 };
 
-const LANDING_PATH = path.join(__dirname, "landing.html");
+const LANDING_PATH = path.join(__dirname, "public", "index.html");
 
 async function sendTelegram(message) {
   const url = `https://api.telegram.org/bot${config.telegramBotToken}/sendMessage`;

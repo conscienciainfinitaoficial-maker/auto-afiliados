@@ -3,10 +3,18 @@ import { Client, LocalAuth } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 
 const PORT = process.env.PORT || 3001;
-const SECRET = process.env.WA_SECRET || "auto-afiliados-2026";
 
 let client = null;
 let ready = false;
+
+function getSecret() {
+  const secret = process.env.WA_SECRET;
+  if (!secret) {
+    console.error("FATAL: WA_SECRET environment variable is required");
+    process.exit(1);
+  }
+  return secret;
+}
 
 async function initWhatsApp() {
   client = new Client({
@@ -50,7 +58,7 @@ const server = http.createServer(async (req, res) => {
 
     try {
       const { to, message, secret } = JSON.parse(data);
-      if (secret !== SECRET) {
+      if (secret !== getSecret()) {
         res.writeHead(403);
         return res.end(JSON.stringify({ error: "Invalid secret" }));
       }

@@ -48,12 +48,16 @@ export async function checkResources(
   let creditsCents = 0;
   try {
     creditsCents = await conway.getCreditsBalance();
-  } catch {}
+  } catch (err) {
+    logger.warn("Failed to fetch credits balance", { error: err instanceof Error ? err.message : String(err) });
+  }
 
   let usdcBalance = 0;
   try {
     usdcBalance = await getUsdcBalance(identity.address);
-  } catch {}
+  } catch (err) {
+    logger.warn("Failed to fetch USDC balance", { error: err instanceof Error ? err.message : String(err) });
+  }
 
   let sandboxHealthy = true;
   try {

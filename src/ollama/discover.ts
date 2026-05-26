@@ -49,8 +49,8 @@ export async function discoverOllamaModels(
       return [];
     }
     data = await resp.json() as OllamaTagsResponse;
-  } catch (err: any) {
-    logger.warn(`Ollama not reachable at ${baseUrl}: ${err.message}`);
+  } catch (err: unknown) {
+    logger.warn(`Ollama not reachable at ${baseUrl}: ${err instanceof Error ? err.message : String(err)}`);
     return [];
   }
 

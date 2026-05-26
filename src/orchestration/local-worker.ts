@@ -69,8 +69,8 @@ export class LocalWorkerPool {
             `Worker crashed: ${error instanceof Error ? error.message : String(error)}`,
             true,
           );
-        } catch {
-          // Task may already be in a terminal state.
+        } catch (err) {
+          logger.warn("Failed to mark task as failed (may already be terminal)", { error: err instanceof Error ? err.message : String(err) });
         }
       })
       .finally(() => {

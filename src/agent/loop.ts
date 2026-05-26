@@ -23,6 +23,7 @@ import type {
   SpendTrackerInterface,
   InputSource,
   ModelStrategyConfig,
+  InferenceToolCall,
 } from "../types.js";
 import { DEFAULT_MODEL_STRATEGY_CONFIG } from "../types.js";
 import type { PolicyEngine } from "./policy-engine.js";
@@ -615,7 +616,7 @@ export async function runAgentLoop(
       // Build a compatible response for the rest of the loop
       const response = {
         message: { content: routerResult.content, role: "assistant" as const },
-        toolCalls: routerResult.toolCalls as any[] | undefined,
+        toolCalls: routerResult.toolCalls as InferenceToolCall[] | undefined,
         usage: {
           promptTokens: routerResult.inputTokens,
           completionTokens: routerResult.outputTokens,
@@ -629,7 +630,7 @@ export async function runAgentLoop(
         timestamp: new Date().toISOString(),
         state: db.getAgentState(),
         input: currentInput?.content,
-        inputSource: currentInput?.source as any,
+        inputSource: currentInput?.source as InputSource | undefined,
         thinking: response.message.content || "",
         toolCalls: [],
         tokenUsage: response.usage,
@@ -638,7 +639,7 @@ export async function runAgentLoop(
 
       // ── Execute Tool Calls ──
       if (response.toolCalls && response.toolCalls.length > 0) {
-        const toolCallMessages: any[] = [];
+        const toolCallMessages: InferenceToolCall[] = [];
         let callCount = 0;
         const currentInputSource = currentInput?.source as InputSource | undefined;
 

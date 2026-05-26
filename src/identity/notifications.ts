@@ -1,13 +1,9 @@
 import { createLogger } from "../observability/logger.js";
+import type { NotificationConfig } from "../types.js";
 
 const logger = createLogger("notifications");
 
 const TELEGRAM_API = "https://api.telegram.org/bot";
-
-export interface NotificationConfig {
-  telegramBotToken?: string;
-  telegramChatId?: string;
-}
 
 let config: NotificationConfig = {};
 

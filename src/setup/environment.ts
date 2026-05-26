@@ -25,7 +25,9 @@ export function detectEnvironment(): EnvironmentInfo {
         }
       }
     }
-  } catch {}
+  } catch (err) {
+    console.warn("Failed to read sandbox config:", err instanceof Error ? err.message : String(err));
+  }
 
   // 3. Check Docker
   if (fs.existsSync("/.dockerenv")) {

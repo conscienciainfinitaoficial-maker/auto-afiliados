@@ -157,28 +157,23 @@ function resolveAndValidatePath(filePath: string): string | null {
  */
 export function isProtectedFile(filePath: string): boolean {
   const resolved = path.resolve(filePath);
+  // Normalize to forward slashes for cross-platform pattern matching.
+  // On Windows, resolve produces C:\... paths; the drive letter prefix is removed.
+  const normalized = resolved.split(path.sep).join("/").replace(/^[a-zA-Z]:/, "");
 
-  // Check against protected file patterns using path-segment matching
   for (const pattern of PROTECTED_FILES) {
     const patternResolved = path.resolve(pattern);
-    // Exact match on resolved paths
     if (resolved === patternResolved) return true;
-    // Match by path suffix: the resolved path ends with /pattern
-    if (resolved.endsWith(path.sep + pattern)) return true;
-    // Also check multi-segment patterns (e.g., "self-mod/code.ts")
-    if (pattern.includes("/") && resolved.endsWith(path.sep + pattern.replace(/\//g, path.sep))) return true;
+    if (normalized.endsWith("/" + pattern)) return true;
   }
 
-  // Check against blocked directory patterns using path-segment matching
   for (const pattern of BLOCKED_DIRECTORY_PATTERNS) {
-    // Check if any path segment matches the blocked directory
-    if (resolved.includes(path.sep + pattern + path.sep) ||
-        resolved.endsWith(path.sep + pattern) ||
-        resolved === pattern) {
+    if (normalized.includes("/" + pattern + "/") ||
+        normalized.endsWith("/" + pattern) ||
+        normalized === pattern) {
       return true;
     }
-    // Handle absolute patterns like /etc/systemd
-    if (pattern.startsWith("/") && resolved.startsWith(pattern)) {
+    if (pattern.startsWith("/") && normalized.startsWith(pattern)) {
       return true;
     }
   }
